@@ -74,9 +74,9 @@ data_df3 = pd.read_csv('data_df3.csv')
 ls =data_df3.columns.tolist()
 ls1 = ls[7:19]
 ls2 = ls[7:19]
-st.write(ls)
-st.write(ls1)
-st.write(ls2)
+# st.write(ls)
+# st.write(ls1)
+# st.write(ls2)
 for i in range(len(ls1)):
     ls1[i] = 'dd'+ls1[i]
 df = data_df3.copy()
