@@ -15,9 +15,6 @@ pn.extension('tabulator')
 import hvplot.pandas 
 import holoviews as hv
 hv.extension('bokeh')
-import requests
-from bs4 import BeautifulSoup
-import webbrowser
 pd.options.mode.copy_on_write = True
 
 st.set_page_config(page_title='Zimbabwe ECLI Dashboard', page_icon = ":globe_with_meridians:", layout = "wide", )
