@@ -195,7 +195,13 @@ df_s['ECLI'] =(df_s['TotalIndex']/df_s['TotWeight'])*100
 df_s1 = df_s[["Year","CategoryName",'ECLI']]
 # st.dataframe(df_s1)
 df_s1 = df_s1.pivot(index = 'CategoryName', values='ECLI', columns = 'Year')
-df_s1
+df_s1_ = df_s1.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
+                .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+                .highlight_between(left=30.0, right = 100.0, color = 'amber')\
+                .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+                .format("{:.2f}")\
+                .set_caption('Subcategory ECLI')
+st.write(df_s1_)
 fig_df_s = px.bar(
     df_s,
     x = 'Year',
@@ -364,7 +370,13 @@ df_s7['ECLI'] =(df_s7['TotalIndex']/df_s7['TotWeight'])*100
 df_s7 = df_s7[["Year","SubCategoryName",'ECLI']]
 # st.dataframe(df_s1)
 df_s8 = df_s7.pivot(index = "SubCategoryName", values='ECLI', columns = 'Year')
-df_s8
+df_s9 = df_s8.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
+                .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+                .highlight_between(left=30.0, right = 100.0, color = 'amber')\
+                .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+                .format("{:.2f}")\
+                .set_caption('Subcategory ECLI')
+st.write(df_s9)
 
 
 
@@ -614,12 +626,15 @@ if len(sub_cat)>0:
     # df16.to_csv('df16.csv')
 
     df17 = df16.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
-                .highlight_between(left=10.0, right = 100.0, color = 'lightblue')\
+                .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+                .highlight_between(left=30.0, right = 100.0, color = 'amber')\
+                .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+                .format("{:.2f}")\
                 .set_caption('Subcategory ECLI')
             
 
 
-    df17
+    st.write(df17)
 else:
     select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
     select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
@@ -885,8 +900,11 @@ if len(sub_cat)>0:
             # # df16.to_csv('df16.csv')
         
             df15 = df14.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
-                        .highlight_between(left=10.0, right = 100.0, color = 'lightblue')\
-                        .set_caption('Subcategory ECLI')
+                .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+                .highlight_between(left=30.0, right = 100.0, color = 'amber')\
+                .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+                .format("{:.2f}")\
+                .set_caption('Subcategory ECLI')
                     
             z = df13.columns[2]
         
