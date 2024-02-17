@@ -175,50 +175,55 @@ ls4 = ["Year","CategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentInde
   "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
   "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards", "ddTotal"]
 
-df_s = ((df_selection.reindex(columns=["Year","CategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
-  "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
-  "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
-  "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards"])).groupby(['Year','CategoryName']).sum()).reset_index()
-# df_s = df_selection[[]]
-df_s['TotWeight'] = df_s[ls1].sum(axis=1)
-df_s['TotalIndex'] = df_s[ls3].sum(axis=1) 
-# df_s = dfs1.reset_index()
-df_s['ECLI'] =(df_s['TotalIndex']/df_s['TotWeight'])*100
+try:
+    df_s = ((df_selection.reindex(columns=["Year","CategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
+    "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
+    "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
+    "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards"])).groupby(['Year','CategoryName']).sum()).reset_index()
+    # df_s = df_selection[[]]
+
+    
+    df_s['TotWeight'] = df_s[ls1].sum(axis=1)
+    df_s['TotalIndex'] = df_s[ls3].sum(axis=1) 
+    # df_s = dfs1.reset_index()
+    df_s['ECLI'] =(df_s['TotalIndex']/df_s['TotWeight'])*100
 
 
 
-# df_s1 = df_selection1.groupby(['Year','Category']).sum().reset_index()
+    # df_s1 = df_selection1.groupby(['Year','Category']).sum().reset_index()
 
-# df_s1 = ((df_s[["Year","CategoryName","ECLI_Index"]]))
-# df_s2 = df_s1.pivot(index = 'CategoryName', columns = 'Year', values = 'ECLI_Index')
+    # df_s1 = ((df_s[["Year","CategoryName","ECLI_Index"]]))
+    # df_s2 = df_s1.pivot(index = 'CategoryName', columns = 'Year', values = 'ECLI_Index')
 
-df_s1 = df_s[["Year","CategoryName",'ECLI']]
-# st.dataframe(df_s1)
-df_s1 = df_s1.pivot(index = 'CategoryName', values='ECLI', columns = 'Year')
-df_s1_ = df_s1.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
-                .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
-                .highlight_between(left=30.0, right = 100.0, color = 'amber')\
-                .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                .format("{:.2f}")\
-                .set_caption('Subcategory ECLI')
-st.write(df_s1_)
-fig_df_s = px.bar(
-    df_s,
-    x = 'Year',
-    y = 'ECLI',
-    color = 'CategoryName',
-    title = "<b>ECLI by category and year</b>",
-    barmode = 'group',
-    # color_discrete_sequence = ["#0083B8"]*len(df_s),
-    template = "plotly_white", 
-)
-fig_df_s.update_layout(
-    xaxis=dict(tickmode="linear"),
-    plot_bgcolor="rgba(0,0,0,0)",
-    yaxis=(dict(showgrid=False)),
-)
+    df_s1 = df_s[["Year","CategoryName",'ECLI']]
+    # st.dataframe(df_s1)
+    df_s1 = df_s1.pivot(index = 'CategoryName', values='ECLI', columns = 'Year')
+    df_s1_ = df_s1.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
+                    .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+                    .highlight_between(left=30.0, right = 100.0, color = 'amber')\
+                    .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+                    .format("{:.2f}")\
+                    .set_caption('Subcategory ECLI')
+    st.write(df_s1_)
+    fig_df_s = px.bar(
+        df_s,
+        x = 'Year',
+        y = 'ECLI',
+        color = 'CategoryName',
+        title = "<b>ECLI by category and year</b>",
+        barmode = 'group',
+        # color_discrete_sequence = ["#0083B8"]*len(df_s),
+        template = "plotly_white", 
+    )
+    fig_df_s.update_layout(
+        xaxis=dict(tickmode="linear"),
+        plot_bgcolor="rgba(0,0,0,0)",
+        yaxis=(dict(showgrid=False)),
+    )
 
-st.plotly_chart(fig_df_s)
+    st.plotly_chart(fig_df_s)
+except:
+    st.markdown("<h3 style='text-align: center;'>You did not select anything</h3>", unsafe_allow_html=True)
 
 
 #NEW PLOT No. 2
@@ -353,52 +358,53 @@ ls9 = ["Year","SCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentInd
   "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
   "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
   "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards", "ddTotal"]
-
-df_s7 = ((df_selection7.reindex(columns=["Year","SubCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
-  "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
-  "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
-  "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards"])).groupby(['Year','SubCategoryName']).sum()).reset_index()
-# df_s = df_selection[[]]
-df_s7['TotWeight'] = df_s7[ls5].sum(axis=1)
-df_s7['TotalIndex'] = df_s7[ls7].sum(axis=1) 
-# df_s = dfs1.reset_index()
-df_s7['ECLI'] =(df_s7['TotalIndex']/df_s7['TotWeight'])*100
-
-
-
-# st.dataframe(df_s7)
-df_s7 = df_s7[["Year","SubCategoryName",'ECLI']]
-# st.dataframe(df_s1)
-df_s8 = df_s7.pivot(index = "SubCategoryName", values='ECLI', columns = 'Year')
-df_s9 = df_s8.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
-                .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
-                .highlight_between(left=30.0, right = 100.0, color = 'amber')\
-                .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                .format("{:.2f}")\
-                .set_caption('Subcategory ECLI')
-st.write(df_s9)
+try:
+    df_s7 = ((df_selection7.reindex(columns=["Year","SubCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
+    "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
+    "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
+    "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards"])).groupby(['Year','SubCategoryName']).sum()).reset_index()
+    # df_s = df_selection[[]]
+    df_s7['TotWeight'] = df_s7[ls5].sum(axis=1)
+    df_s7['TotalIndex'] = df_s7[ls7].sum(axis=1) 
+    # df_s = dfs1.reset_index()
+    df_s7['ECLI'] =(df_s7['TotalIndex']/df_s7['TotWeight'])*100
 
 
 
-fig_df_s7 = px.bar(
-    df_s7,
-    y = 'ECLI',
-    x = 'Year',
-    color = 'SubCategoryName',
-    title = "<b>ECLI by Products</b>",
-    barmode = 'group',
-    # color_discrete_sequence = ["#0083B8"]*len(df_s7),
-    template = "plotly_white",
-    width = 1000, height = 600
-)
-fig_df_s7.update_layout(
-    xaxis=dict(tickmode="linear"),
-    plot_bgcolor="rgba(0,0,0,0)",
-    yaxis=(dict(showgrid=False)),
-)
+    # st.dataframe(df_s7)
+    df_s7 = df_s7[["Year","SubCategoryName",'ECLI']]
+    # st.dataframe(df_s1)
+    df_s8 = df_s7.pivot(index = "SubCategoryName", values='ECLI', columns = 'Year')
+    df_s9 = df_s8.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
+                    .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+                    .highlight_between(left=30.0, right = 100.0, color = 'amber')\
+                    .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+                    .format("{:.2f}")\
+                    .set_caption('Subcategory ECLI')
+    st.write(df_s9)
 
-st.plotly_chart(fig_df_s7)
 
+
+    fig_df_s7 = px.bar(
+        df_s7,
+        y = 'ECLI',
+        x = 'Year',
+        color = 'SubCategoryName',
+        title = "<b>ECLI by Products</b>",
+        barmode = 'group',
+        # color_discrete_sequence = ["#0083B8"]*len(df_s7),
+        template = "plotly_white",
+        width = 1000, height = 600
+    )
+    fig_df_s7.update_layout(
+        xaxis=dict(tickmode="linear"),
+        plot_bgcolor="rgba(0,0,0,0)",
+        yaxis=(dict(showgrid=False)),
+    )
+
+    st.plotly_chart(fig_df_s7)
+except:
+    st.markdown("<h3 style='text-align: center;'>You did not select anything</h3>", unsafe_allow_html=True)
 
 
 
