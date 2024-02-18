@@ -274,9 +274,11 @@ if country !='':
             xaxis=dict(tickmode="linear"),
             plot_bgcolor="rgba(0,0,0,0)",
             yaxis=(dict(showgrid=False)),
+            height = 800,
+            
         )
-    
-        st.plotly_chart(fig_df_s)
+        st.plotly_chart(fig_df_s, use_container_width=True)
+        # st.plotly_chart(fig_df_s)
     except:
         st.markdown("<h3 style='text-align: center;'>You did not select anything</h3>", unsafe_allow_html=True)
 
@@ -470,16 +472,17 @@ if country !='':
             title = "<b>ECLI by Products</b>",
             barmode = 'group',
             # color_discrete_sequence = ["#0083B8"]*len(df_s7),
-            template = "plotly_white",
-            width = 1000, height = 600
+            template = "plotly_white"
         )
         fig_df_s7.update_layout(
             xaxis=dict(tickmode="linear"),
             plot_bgcolor="rgba(0,0,0,0)",
             yaxis=(dict(showgrid=False)),
+            height = 800,
         )
 
-        st.plotly_chart(fig_df_s7)
+        # st.plotly_chart(fig_df_s7)
+        st.plotly_chart(fig_df_s7, use_container_width=True)
     except:
         st.markdown("<h3 style='text-align: center;'>You did not select anything</h3>", unsafe_allow_html=True)
 
@@ -743,6 +746,14 @@ if country !='':
 else:
     st.markdown("<h3 style='text-align: center;'>No Country Was Selected</h3>", unsafe_allow_html=True)
     
+
+
+
+
+
+
+
+
 
 
 #NEW PLOT No. 4
@@ -1019,16 +1030,18 @@ if len(sub_cat)>0:
             title = "<b>ECLI by Products</b>",
             barmode = 'group',
             # color_discrete_sequence = ["#0083B8"]*len(df_s7),
-            template = "plotly_white",
-            width = 1000, height = 600
+            template = "plotly_white"
+            
             )
             fig_df_s16.update_layout(
                 xaxis=dict(tickmode="linear"),
                 plot_bgcolor="rgba(0,0,0,0)",
                 yaxis=(dict(showgrid=False)),
+                height = 800,
             )
             
-            st.plotly_chart(fig_df_s16)
+            # st.plotly_chart(fig_df_s16)
+            st.plotly_chart(fig_df_s16, use_container_width=True)
         except:
             st.write("There is no valid data")
 # else:
