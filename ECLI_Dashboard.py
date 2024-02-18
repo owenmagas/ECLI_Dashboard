@@ -60,6 +60,38 @@ st.markdown("<h1 style='text-align: center;'>SADC COUNTRIES ECLI DASHBOARD</h1>"
 data_df3 = pd.read_csv('data_df3.csv')
 st.write("Choose your country: ")
 country = st.selectbox('Country', options=data_df3['Name'].unique())
+left_co, cent_co,last_co = st.columns(3)
+if country=='Zimbabwe':
+    with cent_co:        
+        st.image("Zimbabwe.png", caption='ZIMBABWE') 
+        
+elif country=='Democratic Republic of the Congo':
+    with cent_co:        
+        st.image("DRC.png", caption='DRC') 
+    
+elif country=='Eswatini':
+    with cent_co:        
+        st.image("Eswatini.png", caption='ESWATINI') 
+    
+elif country=='Botswana':
+    with cent_co:        
+        st.image("Botswana.png", caption='BOTSWANA') 
+    
+elif country=='Lesotho':
+    with cent_co:        
+        st.image("Lesotho.png", caption='LESOTHO') 
+    
+elif country=='Malawi':
+    with cent_co:        
+        st.image("Malawi.png", caption='MALAWI') 
+    
+elif country=='Mozambique':
+    with cent_co:        
+        st.image("Mozambique.png", caption='MOZAMBIQUE') 
+else:
+    with cent_co:        
+        st.image("no_image", caption=country) 
+    
 
 # cursor.execute("""select b.Year, a.Category, a.[Index] as IDX from tblSummary a
 # inner join tblSurvey b
