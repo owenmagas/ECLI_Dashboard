@@ -853,7 +853,9 @@ sub_cat = ['Year']+['Name']+ls2
 
 df_selection2 = df_s2.copy()
 # # df_s3.head()
+# sub_cat
 if len(sub_cat)>0:
+    
     if 'Services' in sub_cat:
         try:
             df_selection2['EServices']=(df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[0]]/df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[1]])*100
@@ -870,11 +872,12 @@ if len(sub_cat)>0:
 
     if 'Resident' in sub_cat:
         try:
+            df_selection2.drop(columns=['EResident'], inplace=True)
             df_selection2['EResident']=(((df_selection2.filter(like='Resident'))[['ResidentIndex', 'ddResident']])[(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']]).columns[0]]/(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']])[df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']].columns[1]])*100
         except:
             df_selection2['EResident']=0
             
-    df_selection2 = df_selection2.T.drop_duplicates().T
+        
         
     if 'ExchangeRateMeasures' in sub_cat:
         try:
@@ -884,11 +887,12 @@ if len(sub_cat)>0:
         
     if 'NonResident' in sub_cat:
         try:
+            df_selection2.drop(columns=['ENonResident'], inplace=True)
             df_selection2['ENonResident']=(((df_selection2.filter(like='NonResident'))[['NonResidentIndex', 'ddNonResident']])[(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']]).columns[0]]/(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']])[df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']].columns[1]])*100
         except:
             df_selection2['ENonResident']=0
             
-    df_selection2 = df_selection2.T.drop_duplicates().T
+        
     
    
         
@@ -938,7 +942,7 @@ if len(sub_cat)>0:
         except:
             df_selection2['EPaymentOutwards'] = 0
     df_selection2 = df_selection2.T.drop_duplicates().T
-# df_selection2.columns
+    # df_selection2
 
     # duplicate_cols = df_selection2.columns[df_selection2.columns.duplicated()]
     # df_selection2.drop(columns=duplicate_cols, inplace=True)
@@ -954,14 +958,15 @@ if len(sub_cat)>0:
         for i in col_s:
             if i in df_selection2.columns:
                 cols.append(i)
-            
-
+    # df_selection2.columns        
+    # cols
     df_selection2.fillna(0, inplace=True)
     # st.write(df_selection2.columns)
     cols=['Year'] +["Name"]+ cols    
     # df13 = df_selection2[cols].apply(pd.to_numeric, errors='coerce')
     df13 = df_selection2[cols]
     df13 = df13.T.drop_duplicates().T
+    # df13
     # st.write(sub_c)
     sub_c = ['Year','Name',sub_c]
     # sub_c.insert(0,'Year')
@@ -1016,7 +1021,7 @@ if len(sub_cat)>0:
                     
             z = df13.columns[2]
 
-            left.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs</h3>", unsafe_allow_html=True)
+            left.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs PER SECTOR</h3>", unsafe_allow_html=True)
             left.table(df15)
             
             if year:
@@ -1029,7 +1034,7 @@ if len(sub_cat)>0:
             y = df13.columns[2] ,
             x = 'Name',
             # color = 'Name',
-            title = "<b>ECLI by Country and Product</b>",
+            title = "<b>ECLIs PER COUNTRY BY SECTOR</b>",
             barmode = 'group',
             # color_discrete_sequence = ["#0083B8"]*len(df_s7),
             template = "plotly_white"
