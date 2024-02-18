@@ -872,7 +872,7 @@ if len(sub_cat)>0:
 
     if 'Resident' in sub_cat:
         try:
-            df_selection2.drop(columns=['EResident'], inplace=True)
+            # df_selection2.drop(columns=['EResident'], inplace=True)
             df_selection2['EResident']=(((df_selection2.filter(like='Resident'))[['ResidentIndex', 'ddResident']])[(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']]).columns[0]]/(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']])[df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']].columns[1]])*100
         except:
             df_selection2['EResident']=0
@@ -887,10 +887,12 @@ if len(sub_cat)>0:
         
     if 'NonResident' in sub_cat:
         try:
-            df_selection2.drop(columns=['ENonResident'], inplace=True)
+            # df_selection2.drop(columns=['ENonResident'], inplace=True)
             df_selection2['ENonResident']=(((df_selection2.filter(like='NonResident'))[['NonResidentIndex', 'ddNonResident']])[(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']]).columns[0]]/(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']])[df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']].columns[1]])*100
         except:
             df_selection2['ENonResident']=0
+        
+        # df_selection2
             
         
     
@@ -941,7 +943,7 @@ if len(sub_cat)>0:
             df_selection2['EPaymentOutwards']=(df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[0]]/df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[1]])*100
         except:
             df_selection2['EPaymentOutwards'] = 0
-    df_selection2 = df_selection2.T.drop_duplicates().T
+    # df_selection2 = df_selection2.T.drop_duplicates().T
     # df_selection2
 
     # duplicate_cols = df_selection2.columns[df_selection2.columns.duplicated()]
