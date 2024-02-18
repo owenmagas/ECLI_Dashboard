@@ -21,8 +21,6 @@ st.markdown("<h1 style='text-align: center;'>SADC COUNTRIES ECLI DASHBOARD</h1>"
 
 
 
-
-
 # conn = pymssql.connect(
 #     host=r'10.16.65.18',
 #     user=r'sa',
@@ -103,11 +101,12 @@ else:
 # data_df1 =data_df1.reset_index()
 # data_df1['IDX']=data_df1['IDX'].astype('float')
 # data_df3.to_csv('data_df3.csv', index=False)
+col1,col2 = st.columns(2)
 
 data_df3 = data_df3.query('Name == @country')
 if country !='':
     st.markdown("---")
-    st.markdown("<h2 style='text-align: center;'>ECLI PER CATEGORY</h2>", unsafe_allow_html=True)
+    # st.markdown("<h2 style='text-align: center;'>ECLI PER CATEGORY</h2>", unsafe_allow_html=True)
     
         
     
@@ -253,13 +252,14 @@ if country !='':
         df_s1 = df_s[["Year","CategoryName",'ECLI']]
         # st.dataframe(df_s1)
         df_s1 = df_s1.pivot(index = 'CategoryName', values='ECLI', columns = 'Year')
-        df_s1_ = df_s1.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
-                        .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+        df_s1_ = df_s1.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
+                        .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
                         .highlight_between(left=30.0, right = 100.0, color = 'orange')\
                         .highlight_between(left=100.0, right = 2000.0, color = 'red')\
                         .format("{:.2f}")\
                         .set_caption('Subcategory ECLI')
-        st.table(df_s1_)
+        col1.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
+        col1.table(df_s1_)
         fig_df_s = px.bar(
             df_s,
             x = 'Year',
@@ -310,7 +310,7 @@ if country !='':
     st.markdown("---")
 
 
-    st.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
+    # st.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
     # cursor.execute("""select d.Year,e.Name, a.SubCategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
     # b.ExchangeRateMeasures,b.Services,
     #     b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
@@ -454,13 +454,14 @@ if country !='':
         df_s7 = df_s7[["Year","SubCategoryName",'ECLI']]
         # st.dataframe(df_s1)
         df_s8 = df_s7.pivot(index = "SubCategoryName", values='ECLI', columns = 'Year')
-        df_s9 = df_s8.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
-                        .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+        df_s9 = df_s8.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
+                        .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
                         .highlight_between(left=30.0, right = 100.0, color = 'orange')\
                         .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                        .format("{:.2f}")\
-                        .set_caption('Subcategory ECLI')
-        st.write(df_s9)
+                        .format("{:.2f}")
+                        
+        col2.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
+        col2.table(df_s9)
 
 
 
@@ -498,8 +499,8 @@ if country !='':
 
     st.markdown("---")
 
-    st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
-
+    # st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
+    left, right = st.columns(2)
     # cursor = conn.cursor(as_dict=True)
     # cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
     # b.ExchangeRateMeasures,b.Services,
@@ -722,14 +723,15 @@ if country !='':
         # df16 = df16[~df16.index.duplicated(keep='first')]
         # df16.to_csv('df16.csv')
 
-        df17 = df16.style.highlight_between(left=0.0, right = 10.0, color = 'green')\
-                    .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+        df17 = df16.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
+                    .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
                     .highlight_between(left=30.0, right = 100.0, color = 'orange')\
                     .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                    .format("{:.2f}")\
-                    .set_caption('Subcategory ECLI')
-
-        st.table(df17)
+                    .format("{:.2f}")
+                    
+                    
+        right.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
+        right.table(df17)
     else:
         select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
         select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
@@ -761,7 +763,7 @@ else:
 
 st.markdown("---")
 
-st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True)
+# st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True
 # cursor = conn.cursor(as_dict=True)
 # cursor.execute("""select d.Year, e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
 # b.ExchangeRateMeasures,b.Services,
@@ -1006,16 +1008,16 @@ if len(sub_cat)>0:
             # # df16 = df16[~df16.index.duplicated(keep='first')]
             # # df16.to_csv('df16.csv')
         
-            df15 = df14.style.highlight_between(left=-0.1, right = 10.0, color = 'green')\
-                .highlight_between(left=10.0, right = 20.0, color = 'yellow')\
+            df15 = df14.style.highlight_between(left=-0.1, right = 20.0, color = 'green')\
+                .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
                 .highlight_between(left=30.0, right = 100.0, color = 'orange')\
                 .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                .format("{:.2f}")\
-                .set_caption('Subcategory ECLI')
+                .format("{:.2f}")
                     
             z = df13.columns[2]
-        
-            st.write(df15)
+
+            left.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs</h3>", unsafe_allow_html=True)
+            left.table(df15)
             
             if year:
                 df16 = df13.query(
@@ -1027,7 +1029,7 @@ if len(sub_cat)>0:
             y = df13.columns[2] ,
             x = 'Name',
             # color = 'Name',
-            title = "<b>ECLI by Products</b>",
+            title = "<b>ECLI by Country and Product</b>",
             barmode = 'group',
             # color_discrete_sequence = ["#0083B8"]*len(df_s7),
             template = "plotly_white"
