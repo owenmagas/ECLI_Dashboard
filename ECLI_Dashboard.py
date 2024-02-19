@@ -60,6 +60,7 @@ st.markdown("<style>\
 #         on e.Id = d.CountryId""")
 # data3 = cursor.fetchall()
 # data_df3 = pd.DataFrame(data3)
+# data_df3.to_csv('data_df3.csv', index=False)
 data_df3 = pd.read_csv('data_df3.csv')
 data_df3.fillna(0, inplace=True)
 st.write("Choose your country: ")
@@ -317,7 +318,7 @@ if country !='':
     st.markdown("---")
 
 
-    # st.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
     # cursor.execute("""select d.Year,e.Name, a.SubCategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
     # b.ExchangeRateMeasures,b.Services,
     #     b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
@@ -506,9 +507,9 @@ if country !='':
 
     st.markdown("---")
 
-    # st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
-    # left, right = st.columns(1)
-    # left, right = st.columns(1)
+    st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
+    left = st.columns(1)
+    left = st.columns(1)
     # cursor = conn.cursor(as_dict=True)
     # cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
     # b.ExchangeRateMeasures,b.Services,
@@ -779,7 +780,7 @@ else:
 
 st.markdown("---")
 
-# st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True
+st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True)
 # cursor = conn.cursor(as_dict=True)
 # cursor.execute("""select d.Year, e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
 # b.ExchangeRateMeasures,b.Services,
