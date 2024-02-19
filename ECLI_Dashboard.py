@@ -29,41 +29,41 @@ st.markdown("<style>\
 </style>", unsafe_allow_html=True)
 
 ## code to connect to a Microsoft SQL Server database using mssql python library
-conn = pymssql.connect(
-    host=r'10.16.65.18',
-    user=r'sa',
-    password=r'Password2010',
-    database='ECLI'
-)
+# conn = pymssql.connect(
+#     host=r'10.16.65.18',
+#     user=r'sa',
+#     password=r'Password2010',
+#     database='ECLI'
+# )
 
-cursor = conn.cursor(as_dict=True)
-cursor1 = conn.cursor(as_dict=True)
-cursor2 = conn.cursor(as_dict=True)
-cursor3 = conn.cursor(as_dict=True)
-cursor4 = conn.cursor(as_dict=True)
+# cursor = conn.cursor(as_dict=True)
+# cursor1 = conn.cursor(as_dict=True)
+# cursor2 = conn.cursor(as_dict=True)
+# cursor3 = conn.cursor(as_dict=True)
+# cursor4 = conn.cursor(as_dict=True)
 
-# code to run a query on the connected database
-cursor = conn.cursor(as_dict=True)
-cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-b.ExchangeRateMeasures,b.Services,
-       b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-       b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-       b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-       c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-       c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-       c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-       c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-        inner join tblQuestion b
-        on a.Id = b.CategoryId
-        inner join tblAnswer c
-        on b.QuestionId = c.QuestionId
-        inner join tblSurvey d
-        on c.SurveyId = d.Id
-        inner join tblCountry e
-        on e.Id = d.CountryId""")
-data3 = cursor.fetchall()
-data_df3 = pd.DataFrame(data3)
-data_df3.to_csv('data_df3.csv', index=False)
+# # code to run a query on the connected database
+# cursor = conn.cursor(as_dict=True)
+# cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+# b.ExchangeRateMeasures,b.Services,
+#        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+#        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+#        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+#        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+#        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+#        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+#        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+#         inner join tblQuestion b
+#         on a.Id = b.CategoryId
+#         inner join tblAnswer c
+#         on b.QuestionId = c.QuestionId
+#         inner join tblSurvey d
+#         on c.SurveyId = d.Id
+#         inner join tblCountry e
+#         on e.Id = d.CountryId""")
+# data3 = cursor.fetchall()
+# data_df3 = pd.DataFrame(data3)
+# data_df3.to_csv('data_df3.csv', index=False)
 
 #reading saved file form database back into the file
 data_df3 = pd.read_csv('data_df3.csv')
@@ -343,27 +343,27 @@ if country !='':
 
 
     st.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
-    cursor.execute("""select d.Year,e.Name, a.SubCategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-    b.ExchangeRateMeasures,b.Services,
-        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-        c.TradeOutwardsIndex, c.GoodsIndex   from tblSubCategory a
-            inner join tblQuestion b
-            on a.Id = b.SubCategoryId
-            inner join tblAnswer c
-            on b.QuestionId = c.QuestionId
-            inner join tblSurvey d
-            on c.SurveyId = d.Id
-            inner join tblCountry e
-            on e.Id = d.CountryId""")
-    data2 = cursor.fetchall()
-    data_df2 = pd.DataFrame(data2)
+    # cursor.execute("""select d.Year,e.Name, a.SubCategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+    # b.ExchangeRateMeasures,b.Services,
+    #     b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+    #     b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+    #     b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+    #     c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+    #     c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+    #     c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+    #     c.TradeOutwardsIndex, c.GoodsIndex   from tblSubCategory a
+    #         inner join tblQuestion b
+    #         on a.Id = b.SubCategoryId
+    #         inner join tblAnswer c
+    #         on b.QuestionId = c.QuestionId
+    #         inner join tblSurvey d
+    #         on c.SurveyId = d.Id
+    #         inner join tblCountry e
+    #         on e.Id = d.CountryId""")
+    # data2 = cursor.fetchall()
+    # data_df2 = pd.DataFrame(data2)
 
-    data_df2.to_csv('data_df2.csv')
+    # data_df2.to_csv('data_df2.csv')
     data_df2 = pd.read_csv('data_df2.csv')
     data_df2 = data_df2.query('Name == @country')
     # data_df3.to_csv('samp5.csv')
@@ -408,7 +408,7 @@ if country !='':
 
     st.sidebar.header('SubCategory Section Filter Here')
     subcategory_name = st.sidebar.multiselect(
-        "Select category:",
+        "Select SubCategory:",
         options = df7['SubCategoryName'].unique(),
         default = df7['SubCategoryName'][0]   
     )
@@ -534,28 +534,28 @@ if country !='':
     st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
     left = st.columns(1)
     left = st.columns(1)
-    cursor = conn.cursor(as_dict=True)
-    cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-    b.ExchangeRateMeasures,b.Services,
-        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-        inner join tblQuestion b
-        on a.Id = b.CategoryId
-        inner join tblAnswer c
-        on b.QuestionId = c.QuestionId
-        inner join tblSurvey d
-        on c.SurveyId = d.Id 
-        inner join tblCountry e
-        on e.Id = d.CountryId""")
-    data4 = cursor.fetchall()
-    data_df4 = pd.DataFrame(data4)
+    # cursor = conn.cursor(as_dict=True)
+    # cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+    # b.ExchangeRateMeasures,b.Services,
+    #     b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+    #     b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+    #     b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+    #     c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+    #     c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+    #     c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+    #     c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+    #     inner join tblQuestion b
+    #     on a.Id = b.CategoryId
+    #     inner join tblAnswer c
+    #     on b.QuestionId = c.QuestionId
+    #     inner join tblSurvey d
+    #     on c.SurveyId = d.Id 
+    #     inner join tblCountry e
+    #     on e.Id = d.CountryId""")
+    # data4 = cursor.fetchall()
+    # data_df4 = pd.DataFrame(data4)
 
-    data_df4.to_csv('data_df4.csv', index=False)
+    # data_df4.to_csv('data_df4.csv', index=False)
     data_df4 = pd.read_csv('data_df4.csv')
     data_df4 = data_df4.query('Name == @country')
     # data_df4.to_csv('data_df4.csv')
@@ -597,7 +597,7 @@ if country !='':
     st.sidebar.header('Sector Section Filter Here')
 
     sub_cat = st.sidebar.multiselect(
-        "Select question:",
+        "Select Sector:",
         options = ls2,
         default = ls2
     )
@@ -811,28 +811,28 @@ else:
 st.markdown("---")
 
 st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True)
-cursor = conn.cursor(as_dict=True)
-cursor.execute("""select d.Year, e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-b.ExchangeRateMeasures,b.Services,
-       b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-       b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-       b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-       c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-       c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-       c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-       c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-        inner join tblQuestion b
-        on a.Id = b.CategoryId
-        inner join tblAnswer c
-        on b.QuestionId = c.QuestionId
-        inner join tblSurvey d
-        on c.SurveyId = d.Id 
-        inner join tblCountry e
-        on e.Id = d.CountryId""")
-data5 = cursor.fetchall()
-data_df5 = pd.DataFrame(data5)
+# cursor = conn.cursor(as_dict=True)
+# cursor.execute("""select d.Year, e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+# b.ExchangeRateMeasures,b.Services,
+#        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+#        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+#        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+#        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+#        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+#        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+#        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+#         inner join tblQuestion b
+#         on a.Id = b.CategoryId
+#         inner join tblAnswer c
+#         on b.QuestionId = c.QuestionId
+#         inner join tblSurvey d
+#         on c.SurveyId = d.Id 
+#         inner join tblCountry e
+#         on e.Id = d.CountryId""")
+# data5 = cursor.fetchall()
+# data_df5 = pd.DataFrame(data5)
 
-data_df5.to_csv('data_df5.csv', index=False)
+# data_df5.to_csv('data_df5.csv', index=False)
 data_df5 = pd.read_csv('data_df5.csv')
 
 data_df5.fillna(0,inplace=True)
