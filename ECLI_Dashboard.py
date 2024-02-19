@@ -286,7 +286,7 @@ if country !='':
         st.plotly_chart(fig_df_s, use_container_width=True)
         # st.plotly_chart(fig_df_s)
     except:
-        st.markdown("<h3 style='text-align: center;'>You did not select anything</h3>", unsafe_allow_html=True)
+        st.warning("No Main Category ECLIs to show: You did not select anything")
 
 
 
@@ -491,7 +491,7 @@ if country !='':
         # st.plotly_chart(fig_df_s7)
         st.plotly_chart(fig_df_s7, use_container_width=True)
     except:
-        st.markdown("<h3 style='text-align: center;'>You did not select anything</h3>", unsafe_allow_html=True)
+        st.warning("No subcategory ECLIs to show: You did not select anything")
 
 
 
@@ -743,7 +743,15 @@ if country !='':
         select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
         df_selection2_ = df_s2.copy()
         df_selection2_['total_ECLI'] = (df_selection2_[select].sum(axis=1)/df_selection2_[select1].sum(axis=1))*100
-        st.dataframe(df_selection2_[['Year','total_ECLI']])
+        # dfs2 = df_selection2_.transpose()
+        dfs2 = df_selection2_[['Year','total_ECLI']].transpose()
+        dfs3 =dfs2.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
+                    .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
+                    .highlight_between(left=30.0, right = 100.0, color = 'orange')\
+                    .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+                    .format("{:.2f}")
+        right.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
+        right.table(dfs3)
     # st.dataframe(data_df4)
     # # multi_select = st.multiselect('Choose Category', options=('2020', '2021','amazon','oracle'))
     # # multi_select1 = st.multiselect('Choose Year', options=('MICRosoft', 'Apple','amazon','oracle'))
@@ -752,7 +760,7 @@ if country !='':
     # #     df3 = df2[df2['Year']== multi_select]
     # #     st.dataframe(df3)
 else:
-    st.markdown("<h3 style='text-align: center;'>No Country Was Selected</h3>", unsafe_allow_html=True)
+    st.warning("No Sector ECLIs to show: No valid selection was done")
     
 
 
@@ -1058,7 +1066,7 @@ if len(sub_cat)>0:
             # st.plotly_chart(fig_df_s16)
             st.plotly_chart(fig_df_s16, use_container_width=True)
         except:
-            st.write("There is no valid data")
+            st.warning("No Country ECLIs to show: There is no valid data")
 # else:
 #     select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
 #     select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
