@@ -24,7 +24,7 @@ st.markdown("<style>\
   background-image: url('DRC.png);\
   background-size: cover;\
 }\
-</style>")
+</style>", unsafe_allow_html=True)
 
 # conn = pymssql.connect(
 #     host=r'10.16.65.18',
