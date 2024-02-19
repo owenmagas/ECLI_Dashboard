@@ -19,7 +19,12 @@ hv.extension('bokeh')
 st.set_page_config(page_title='SADC Countries ECLI Dashboard', page_icon = ":globe_with_meridians:", layout = "wide", )
 st.markdown("<h1 style='text-align: center;'>SADC COUNTRIES ECLI DASHBOARD</h1>", unsafe_allow_html=True)
 
-
+st.markdown("<style>\
+            .stAppViewBlockContainer{\
+  background-image: url('DRC.png);\
+  background-size: cover;\
+}\
+</style>")
 
 # conn = pymssql.connect(
 #     host=r'10.16.65.18',
@@ -56,6 +61,7 @@ st.markdown("<h1 style='text-align: center;'>SADC COUNTRIES ECLI DASHBOARD</h1>"
 # data3 = cursor.fetchall()
 # data_df3 = pd.DataFrame(data3)
 data_df3 = pd.read_csv('data_df3.csv')
+data_df3.fillna(0, inplace=True)
 st.write("Choose your country: ")
 country = st.selectbox('Country', options=data_df3['Name'].unique())
 left_co, cent_co,last_co = st.columns(3)
@@ -1027,13 +1033,13 @@ if len(sub_cat)>0:
             left.table(df15)
             
             if year:
-                df16 = df13.query(
+                df16 = df13_1.query(
                     "Year == @year"
                 )
-            
+            # df13_1
             fig_df_s16 = px.bar(
             df16,
-            y = df13.columns[2] ,
+            y = df13_1.columns[2] ,
             x = 'Name',
             # color = 'Name',
             title = "<b>ECLIs PER COUNTRY BY SECTOR</b>",
