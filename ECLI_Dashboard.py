@@ -16,9 +16,11 @@ import hvplot.pandas
 import holoviews as hv
 hv.extension('bokeh')
 
+# code to display headings on the page
 st.set_page_config(page_title='SADC Countries ECLI Dashboard', page_icon = ":globe_with_meridians:", layout = "wide", )
 st.markdown("<h1 style='text-align: center;'>SADC COUNTRIES ECLI DASHBOARD</h1>", unsafe_allow_html=True)
 
+# cosde to style the background iage of the page
 st.markdown("<style>\
             .stAppViewBlockContainer{\
   background-image: url('DRC.png);\
@@ -26,46 +28,54 @@ st.markdown("<style>\
 }\
 </style>", unsafe_allow_html=True)
 
-# conn = pymssql.connect(
-#     host=r'10.16.65.18',
-#     user=r'sa',
-#     password=r'Password2010',
-#     database='ECLI'
-# )
+## code to connect to a Microsoft SQL Server database using mssql python library
+conn = pymssql.connect(
+    host=r'10.16.65.18',
+    user=r'sa',
+    password=r'Password2010',
+    database='ECLI'
+)
 
-# cursor = conn.cursor(as_dict=True)
-# cursor1 = conn.cursor(as_dict=True)
-# cursor2 = conn.cursor(as_dict=True)
-# cursor3 = conn.cursor(as_dict=True)
-# cursor4 = conn.cursor(as_dict=True)
+cursor = conn.cursor(as_dict=True)
+cursor1 = conn.cursor(as_dict=True)
+cursor2 = conn.cursor(as_dict=True)
+cursor3 = conn.cursor(as_dict=True)
+cursor4 = conn.cursor(as_dict=True)
 
+# code to run a query on the connected database
+cursor = conn.cursor(as_dict=True)
+cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+b.ExchangeRateMeasures,b.Services,
+       b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+       b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+       b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+       c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+       c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+       c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+       c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+        inner join tblQuestion b
+        on a.Id = b.CategoryId
+        inner join tblAnswer c
+        on b.QuestionId = c.QuestionId
+        inner join tblSurvey d
+        on c.SurveyId = d.Id
+        inner join tblCountry e
+        on e.Id = d.CountryId""")
+data3 = cursor.fetchall()
+data_df3 = pd.DataFrame(data3)
+data_df3.to_csv('data_df3.csv', index=False)
 
-# cursor = conn.cursor(as_dict=True)
-# cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-# b.ExchangeRateMeasures,b.Services,
-#        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-#        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-#        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-#        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-#        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-#        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-#        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-#         inner join tblQuestion b
-#         on a.Id = b.CategoryId
-#         inner join tblAnswer c
-#         on b.QuestionId = c.QuestionId
-#         inner join tblSurvey d
-#         on c.SurveyId = d.Id
-#         inner join tblCountry e
-#         on e.Id = d.CountryId""")
-# data3 = cursor.fetchall()
-# data_df3 = pd.DataFrame(data3)
-# data_df3.to_csv('data_df3.csv', index=False)
+#reading saved file form database back into the file
 data_df3 = pd.read_csv('data_df3.csv')
+#replacing none values with zeros
 data_df3.fillna(0, inplace=True)
+
+#code to direct user to choose a country and showing options for user to choose
 st.write("Choose your country: ")
 country = st.selectbox('Country', options=data_df3['Name'].unique())
 left_co, cent_co,last_co = st.columns(3)
+
+#code to display country flag depending oon user choice
 if country=='Zimbabwe':
     with cent_co:        
         st.image("Zimbabwe.png", caption='ZIMBABWE') 
@@ -111,15 +121,11 @@ else:
 col1 = st.columns(1)
 col2= st.columns(1)
 
+#selct a sub dataframe with data from the slected country
 data_df3 = data_df3.query('Name == @country')
 if country !='':
     st.markdown("---")
     # st.markdown("<h2 style='text-align: center;'>ECLI PER CATEGORY</h2>", unsafe_allow_html=True)
-    
-        
-    
-    
-    
     # cursor.execute("""select b.Year, a.Category, a.[Index] as IDX from tblSummary a
     # inner join tblSurvey b
     # on a.SurveyId = b.Id
@@ -133,25 +139,40 @@ if country !='':
     # data_df3.to_csv('samp5.csv')
     # st.dataframe(data_df3)
     # ds =data_df3.columns.tolist()
+    
+    #code to create a list containing dataframe columns
+    #and list of subset of the columns
     ls =data_df3.columns.tolist()
     ls1 = ls[7:19]
     ls2 = ls[7:19]
     # st.write(ls)
     # st.write(ls1)
     # st.write(ls2)
+    
+    #encoding columns to change their names
     for i in range(len(ls1)):
         ls1[i] = 'dd'+ls1[i]
     df = data_df3.copy()
     # df.info()
+    #converting non-numeric alues to numeric
     df[ls2]= df[ls2].apply(pd.to_numeric, errors='coerce')
+    
+    #selecting a subset of columns which have Index in their name
     ls3 = (df.filter(like='Index')).columns.tolist()
     df[ls3]= df[ls3].apply(pd.to_numeric, errors='coerce')
+    
+    #setting a subset of colums to an initial value of 1
     for i in ls1:
         df[i] = 1
+        
+    #
     df['DNormalisedWeight']= df['DNormalisedWeight'].apply(pd.to_numeric, errors='coerce')
+    #calculating wigthed values and populate the dataframe
     for i, j in zip(ls2 , ls1):
         df[j] = df[i]*df['DNormalisedWeight']*8
     # df[ls1] = df[ls1]*8 
+    
+    #selecting a subset of columns to assigne to a new dataframe  
     dfs = df.reindex(columns=['Year', 'CategoryName', 'ServicesIndex', 'AppliestoAllIndex', 'ResidentIndex',\
            'PaymentOutwardsIndex', 'ExchangeRateMeasuresIndex', 'NonResidentIndex',\
            'PaymentInwardsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex',\
@@ -160,7 +181,11 @@ if country !='':
            'ddCapitalAccount', 'ddAppliestoAll', 'ddResident', 'ddNonResident',\
            'ddPaymentInwards', 'ddPaymentOutwards', 'ddTradeInwards',\
            'ddTradeOutwards'])
+    
+    #grouping and summing columns vertically basing on the year and category
     dfs1 = dfs.groupby(['Year','CategoryName']).sum()  
+    
+    #creating weights and index as a sum of the individual columns
     dfs1['TotWeight'] = dfs1[ls1].sum(axis=1)
     dfs1['TotalIndex'] = dfs1[ls3].sum(axis=1) 
     dfs2 = dfs1.reset_index()
@@ -318,27 +343,27 @@ if country !='':
 
 
     st.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
-    # cursor.execute("""select d.Year,e.Name, a.SubCategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-    # b.ExchangeRateMeasures,b.Services,
-    #     b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-    #     b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-    #     b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-    #     c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-    #     c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-    #     c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-    #     c.TradeOutwardsIndex, c.GoodsIndex   from tblSubCategory a
-    #         inner join tblQuestion b
-    #         on a.Id = b.SubCategoryId
-    #         inner join tblAnswer c
-    #         on b.QuestionId = c.QuestionId
-    #         inner join tblSurvey d
-    #         on c.SurveyId = d.Id
-    #         inner join tblCountry e
-    #         on e.Id = d.CountryId""")
-    # data2 = cursor.fetchall()
-    # data_df2 = pd.DataFrame(data2)
+    cursor.execute("""select d.Year,e.Name, a.SubCategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+    b.ExchangeRateMeasures,b.Services,
+        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+        c.TradeOutwardsIndex, c.GoodsIndex   from tblSubCategory a
+            inner join tblQuestion b
+            on a.Id = b.SubCategoryId
+            inner join tblAnswer c
+            on b.QuestionId = c.QuestionId
+            inner join tblSurvey d
+            on c.SurveyId = d.Id
+            inner join tblCountry e
+            on e.Id = d.CountryId""")
+    data2 = cursor.fetchall()
+    data_df2 = pd.DataFrame(data2)
 
-    # data_df2.to_csv('data_df2.csv')
+    data_df2.to_csv('data_df2.csv')
     data_df2 = pd.read_csv('data_df2.csv')
     data_df2 = data_df2.query('Name == @country')
     # data_df3.to_csv('samp5.csv')
@@ -509,28 +534,28 @@ if country !='':
     st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
     left = st.columns(1)
     left = st.columns(1)
-    # cursor = conn.cursor(as_dict=True)
-    # cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-    # b.ExchangeRateMeasures,b.Services,
-    #     b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-    #     b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-    #     b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-    #     c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-    #     c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-    #     c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-    #     c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-    #     inner join tblQuestion b
-    #     on a.Id = b.CategoryId
-    #     inner join tblAnswer c
-    #     on b.QuestionId = c.QuestionId
-    #     inner join tblSurvey d
-    #     on c.SurveyId = d.Id 
-    #     inner join tblCountry e
-    #     on e.Id = d.CountryId""")
-    # data4 = cursor.fetchall()
-    # data_df4 = pd.DataFrame(data4)
+    cursor = conn.cursor(as_dict=True)
+    cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+    b.ExchangeRateMeasures,b.Services,
+        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+        inner join tblQuestion b
+        on a.Id = b.CategoryId
+        inner join tblAnswer c
+        on b.QuestionId = c.QuestionId
+        inner join tblSurvey d
+        on c.SurveyId = d.Id 
+        inner join tblCountry e
+        on e.Id = d.CountryId""")
+    data4 = cursor.fetchall()
+    data_df4 = pd.DataFrame(data4)
 
-    # data_df4.to_csv('data_df4.csv', index=False)
+    data_df4.to_csv('data_df4.csv', index=False)
     data_df4 = pd.read_csv('data_df4.csv')
     data_df4 = data_df4.query('Name == @country')
     # data_df4.to_csv('data_df4.csv')
@@ -684,8 +709,9 @@ if country !='':
 
         # # df_selection2 = df_selection2.T.drop_duplicates().T
         # # df_selection2.to_csv('see.csv')
+        # df_selection2.columns
         if len(df_selection2)>0:
-            col_s =['EServices', 'EAppliestoAll', 'EResident','EPaymentInwards', 'EFinancialSector','ENonResident','ECapitalAccount',\
+            col_s =['EExchangeRateMeasure','EServices', 'EAppliestoAll', 'EResident','EPaymentInwards', 'EFinancialSector','ENonResident','ECapitalAccount',\
                 'ETradeInwards', 'ETradeOutwards', 'EGoods', 'EPaymentOutwards']
             cols = []
             for i in col_s:
@@ -695,10 +721,11 @@ if country !='':
 
         df_selection2.fillna(0, inplace=True)
         # st.write(df_selection2.columns)
-        cols=['Year'] + cols    
+        cols1=['Year'] + cols 
+        # cols1   
         # df13 = df_selection2[cols].apply(pd.to_numeric, errors='coerce')
-        df13 = df_selection2[cols]
-        
+        df13 = df_selection2[cols1]
+        # df13
         # df13.to_csv('df_sel.csv')
         # # cols1.insert(0,'Year')
         
@@ -710,15 +737,18 @@ if country !='':
         df14 = df13.copy()
         select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
         select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
+        # df_s2
         df_selection2_ = df_s2.copy()
         df_selection2_['total_ECLI'] = (df_selection2_[select].sum(axis=1)/df_selection2_[select1].sum(axis=1))*100
+        # df_selection2_
         y = df_selection2_['total_ECLI'].to_list()
+        # df14
         df14.insert(1,'total_Ecli',y)
         # df14['total_Ecl'] = y
         # df14.to_csv('df14.csv')
 
         df15 = df14.transpose()
-
+        # df15
 
         df16 = df15.copy()
         # # df15.to_csv('df15.csv')
@@ -781,28 +811,28 @@ else:
 st.markdown("---")
 
 st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True)
-# cursor = conn.cursor(as_dict=True)
-# cursor.execute("""select d.Year, e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-# b.ExchangeRateMeasures,b.Services,
-#        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-#        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-#        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-#        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-#        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-#        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-#        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-#         inner join tblQuestion b
-#         on a.Id = b.CategoryId
-#         inner join tblAnswer c
-#         on b.QuestionId = c.QuestionId
-#         inner join tblSurvey d
-#         on c.SurveyId = d.Id 
-#         inner join tblCountry e
-#         # on e.Id = d.CountryId""")
-# data5 = cursor.fetchall()
-# data_df5 = pd.DataFrame(data5)
+cursor = conn.cursor(as_dict=True)
+cursor.execute("""select d.Year, e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+b.ExchangeRateMeasures,b.Services,
+       b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+       b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+       b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+       c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+       c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+       c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+       c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+        inner join tblQuestion b
+        on a.Id = b.CategoryId
+        inner join tblAnswer c
+        on b.QuestionId = c.QuestionId
+        inner join tblSurvey d
+        on c.SurveyId = d.Id 
+        inner join tblCountry e
+        on e.Id = d.CountryId""")
+data5 = cursor.fetchall()
+data_df5 = pd.DataFrame(data5)
 
-# data_df5.to_csv('data_df5.csv', index=False)
+data_df5.to_csv('data_df5.csv', index=False)
 data_df5 = pd.read_csv('data_df5.csv')
 
 data_df5.fillna(0,inplace=True)
@@ -845,7 +875,7 @@ select = ['ExchangeRateMeasures', 'Services', 'Goods', 'FinancialSector', 'Capit
 #     options = ls2,
 #     default = ls2
 # )
-sc = ["EServices", "EAppliestoAll", "EResident", "EPaymentOutwards", "EExchangeRateMeasures",\
+sc = ["EServices", "EAppliestoAll", "EResident", "EPaymentOutwards", "EExchangeRateMeasure",\
   "ENonResident", "EPaymentInwards", "EFinancialSector", "ECapitalAccount", "ETradeInwards", "ETradeOutwards",\
   "EGoods"]
 # st.write(sc)
@@ -871,6 +901,7 @@ sub_cat = ['Year']+['Name']+ls2
 df_selection2 = df_s2.copy()
 # # df_s3.head()
 # sub_cat
+# df_selection2
 if len(sub_cat)>0:
     
     if 'Services' in sub_cat:
@@ -971,7 +1002,7 @@ if len(sub_cat)>0:
     # # df_selection2 = df_selection2.T.drop_duplicates().T
     # # df_selection2.to_csv('see.csv')
     if len(df_selection2)>0:
-        col_s =['ExchangeRateMeasures','EServices', 'EAppliestoAll', 'EResident','EPaymentInwards', 'EFinancialSector','ENonResident','ECapitalAccount',\
+        col_s =['EExchangeRateMeasure','EServices', 'EAppliestoAll', 'EResident','EPaymentInwards', 'EFinancialSector','ENonResident','ECapitalAccount',\
             'ETradeInwards', 'ETradeOutwards', 'EGoods', 'EPaymentOutwards']
         cols = []
         for i in col_s:
@@ -984,10 +1015,12 @@ if len(sub_cat)>0:
     cols=['Year'] +["Name"]+ cols    
     # df13 = df_selection2[cols].apply(pd.to_numeric, errors='coerce')
     df13 = df_selection2[cols]
+    # df13
     df13 = df13.T.drop_duplicates().T
     # df13
     # st.write(sub_c)
     sub_c = ['Year','Name',sub_c]
+    # sub_c
     # sub_c.insert(0,'Year')
     # sub_c.insert(1,'Name')
     if len(sub_c)>0:
