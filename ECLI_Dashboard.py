@@ -798,7 +798,7 @@ st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allo
 #         inner join tblSurvey d
 #         on c.SurveyId = d.Id 
 #         inner join tblCountry e
-#         on e.Id = d.CountryId""")
+#         # on e.Id = d.CountryId""")
 # data5 = cursor.fetchall()
 # data_df5 = pd.DataFrame(data5)
 
