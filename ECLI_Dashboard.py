@@ -260,12 +260,11 @@ if country !='':
         df_s1 = df_s[["Year","CategoryName",'ECLI']]
         # st.dataframe(df_s1)
         df_s1 = df_s1.pivot(index = 'CategoryName', values='ECLI', columns = 'Year')
-        df_s1_ = df_s1.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
-                        .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
-                        .highlight_between(left=30.0, right = 100.0, color = 'orange')\
-                        .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                        .format("{:.2f}")\
-                        .set_caption('Subcategory ECLI')
+        df_s1_ = df_s1.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                        .format("{:.2f}")
         st.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
         st.table(df_s1_)
         fig_df_s = px.bar(
@@ -462,10 +461,10 @@ if country !='':
         df_s7 = df_s7[["Year","SubCategoryName",'ECLI']]
         # st.dataframe(df_s1)
         df_s8 = df_s7.pivot(index = "SubCategoryName", values='ECLI', columns = 'Year')
-        df_s9 = df_s8.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
-                        .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
-                        .highlight_between(left=30.0, right = 100.0, color = 'orange')\
-                        .highlight_between(left=100.0, right = 2000.0, color = 'red')\
+        df_s9 = df_s8.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
                         
         st.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
@@ -732,11 +731,12 @@ if country !='':
         # df16 = df16[~df16.index.duplicated(keep='first')]
         # df16.to_csv('df16.csv')
 
-        df17 = df16.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
-                    .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
-                    .highlight_between(left=30.0, right = 100.0, color = 'orange')\
-                    .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                    .format("{:.2f}")
+        df17 = df16.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                        .format("{:.2f}")\
+                        .set_caption('Subcategory ECLI')
                     
                     
         st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
@@ -748,11 +748,11 @@ if country !='':
         df_selection2_['total_ECLI'] = (df_selection2_[select].sum(axis=1)/df_selection2_[select1].sum(axis=1))*100
         # dfs2 = df_selection2_.transpose()
         dfs2 = df_selection2_[['Year','total_ECLI']].transpose()
-        dfs3 =dfs2.style.highlight_between(left=0.0, right = 20.0, color = 'green')\
-                    .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
-                    .highlight_between(left=30.0, right = 100.0, color = 'orange')\
-                    .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                    .format("{:.2f}")
+        dfs3 =dfs2.style.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                        .format("{:.2f}")
         st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
         st.table(dfs3)
     # st.dataframe(data_df4)
@@ -1032,11 +1032,11 @@ if len(sub_cat)>0:
             # # df16 = df16[~df16.index.duplicated(keep='first')]
             # # df16.to_csv('df16.csv')
         
-            df15 = df14.style.highlight_between(left=-0.1, right = 20.0, color = 'green')\
-                .highlight_between(left=20.0, right = 30.0, color = 'yellow')\
-                .highlight_between(left=30.0, right = 100.0, color = 'orange')\
-                .highlight_between(left=100.0, right = 2000.0, color = 'red')\
-                .format("{:.2f}")
+            df15 = df14.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                        .format("{:.2f}")
                     
             z = df13.columns[2]
 
