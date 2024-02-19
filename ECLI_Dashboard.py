@@ -107,7 +107,8 @@ else:
 # data_df1 =data_df1.reset_index()
 # data_df1['IDX']=data_df1['IDX'].astype('float')
 # data_df3.to_csv('data_df3.csv', index=False)
-col1,col2 = st.columns(2)
+col1 = st.columns(1)
+col2= st.columns(1)
 
 data_df3 = data_df3.query('Name == @country')
 if country !='':
@@ -264,8 +265,8 @@ if country !='':
                         .highlight_between(left=100.0, right = 2000.0, color = 'red')\
                         .format("{:.2f}")\
                         .set_caption('Subcategory ECLI')
-        col1.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
-        col1.table(df_s1_)
+        st.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
+        st.table(df_s1_)
         fig_df_s = px.bar(
             df_s,
             x = 'Year',
@@ -466,8 +467,8 @@ if country !='':
                         .highlight_between(left=100.0, right = 2000.0, color = 'red')\
                         .format("{:.2f}")
                         
-        col2.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
-        col2.table(df_s9)
+        st.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
+        st.table(df_s9)
 
 
 
@@ -506,7 +507,8 @@ if country !='':
     st.markdown("---")
 
     # st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
-    left, right = st.columns(2)
+    # left, right = st.columns(1)
+    # left, right = st.columns(1)
     # cursor = conn.cursor(as_dict=True)
     # cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
     # b.ExchangeRateMeasures,b.Services,
@@ -736,8 +738,8 @@ if country !='':
                     .format("{:.2f}")
                     
                     
-        right.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
-        right.table(df17)
+        st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
+        st.table(df17)
     else:
         select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
         select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
@@ -750,8 +752,8 @@ if country !='':
                     .highlight_between(left=30.0, right = 100.0, color = 'orange')\
                     .highlight_between(left=100.0, right = 2000.0, color = 'red')\
                     .format("{:.2f}")
-        right.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
-        right.table(dfs3)
+        st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
+        st.table(dfs3)
     # st.dataframe(data_df4)
     # # multi_select = st.multiselect('Choose Category', options=('2020', '2021','amazon','oracle'))
     # # multi_select1 = st.multiselect('Choose Year', options=('MICRosoft', 'Apple','amazon','oracle'))
@@ -1037,8 +1039,8 @@ if len(sub_cat)>0:
                     
             z = df13.columns[2]
 
-            left.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs PER SECTOR</h3>", unsafe_allow_html=True)
-            left.table(df15)
+            st.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs PER SECTOR</h3>", unsafe_allow_html=True)
+            st.table(df15)
             
             if year:
                 df16 = df13_1.query(
