@@ -42,7 +42,7 @@ st.markdown("<style>\
 # cursor3 = conn.cursor(as_dict=True)
 # cursor4 = conn.cursor(as_dict=True)
 
-# # code to run a query on the connected database
+# code to run a query on the connected database
 # cursor = conn.cursor(as_dict=True)
 # cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
 # b.ExchangeRateMeasures,b.Services,
@@ -67,6 +67,7 @@ st.markdown("<style>\
 
 #reading saved file form database back into the file
 data_df3 = pd.read_csv('data_df3.csv')
+data_df3 = data_df3.replace(np.nan,0)
 #replacing none values with zeros
 data_df3.fillna(0, inplace=True)
 
@@ -102,10 +103,22 @@ elif country=='Malawi':
     
 elif country=='Mozambique':
     with cent_co:        
-        st.image("Mozambique.png", caption='MOZAMBIQUE') 
+        st.image("Mozambique.png", caption='MOZAMBIQUE')
+elif country=='Tanzania':
+    with cent_co:        
+        st.image("Tanzania.png", caption='TANZANIA')
+elif country=='South Africa':
+    with cent_co:        
+        st.image("South Africa.png", caption='SOUNTH AFRICA')
+elif country=='Namibia':
+    with cent_co:        
+        st.image("Namibia.png", caption='NAMIBIA')
+elif country=='Angola':
+    with cent_co:        
+        st.image("Angola.png", caption='ANGOLA')
 else:
     with cent_co:        
-        st.image("no_image", caption=country) 
+        st.image(f"{country}.png", caption=country) 
     
 
 # cursor.execute("""select b.Year, a.Category, a.[Index] as IDX from tblSummary a
@@ -363,15 +376,16 @@ if country !='':
     # data2 = cursor.fetchall()
     # data_df2 = pd.DataFrame(data2)
 
-    # data_df2.to_csv('data_df2.csv')
+    # data_df2.to_csv('data_df2.csv', index=False)
     data_df2 = pd.read_csv('data_df2.csv')
+    data_df2 = data_df2.replace(np.nan,0)
     data_df2 = data_df2.query('Name == @country')
     # data_df3.to_csv('samp5.csv')
     # st.dataframe(data_df3)
     # ds =data_df3.columns.tolist()
     ls8 =data_df2.columns.tolist()
-    ls5 = ls8[8:19]
-    ls6 = ls8[8:19]
+    ls5 = ls8[7:19]
+    ls6 = ls8[7:19]
     for i in range(len(ls5)):
         ls5[i] = 'dd'+ls5[i]
     df5 = data_df2.copy()
@@ -557,6 +571,8 @@ if country !='':
 
     # data_df4.to_csv('data_df4.csv', index=False)
     data_df4 = pd.read_csv('data_df4.csv')
+    data_df4 = data_df4.replace(np.nan,0)
+    data_df4.to_csv('data_df4.csv', index=False)
     data_df4 = data_df4.query('Name == @country')
     # data_df4.to_csv('data_df4.csv')
     # data_df4 = pd.read_csv('data_df4.csv')
@@ -572,12 +588,13 @@ if country !='':
     for i in ls1:
         data_df4[i] = 1
     data_df4['DNormalisedWeight']= data_df4['DNormalisedWeight'].apply(pd.to_numeric, errors='coerce')
+    
     for i, j in zip(ls2 , ls1):
         data_df4[j] = data_df4[i]*data_df4['DNormalisedWeight']*8
-    
-        data_df4['TotWeight'] = data_df4[ls1].sum(axis=1)
+        
+    data_df4['TotWeight'] = data_df4[ls1].sum(axis=1)
     data_df4['TotalIndex'] = data_df4[ls3].sum(axis=1)
-
+    
     df_s2 = ((data_df4.reindex(columns=["Year","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
     "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
     "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
@@ -605,15 +622,21 @@ if country !='':
     sc = []
     for i in sub_cat:
         x = df_s2.columns.str.contains(i)
-        for i in range(len(x)):
-            if x[i]==True:
-                sc.append(df_s2.columns[i])    
+        for j in range(len(x)):
+            if x[j]==True:
+                y = df_s2.columns[j]
+                if y not in sc:
+                    sc.append(y)
+    
+    
+         
+    
     if sub_cat:
         sc.insert(0,'Year')
         df_selection2 = df_s2[sc]
 
 
-
+    df_selection2.to_csv('data_df.csv', index=False)
     # # df_s3.head()
     if len(sub_cat)>0:
         if 'Services' in sub_cat:
@@ -636,7 +659,7 @@ if country !='':
             except:
                 df_selection2['EResident']=0
                 
-        df_selection2 = df_selection2.T.drop_duplicates().T
+        # df_selection2 = df_selection2.T.drop_duplicates().T
             
         if 'ExchangeRateMeasures' in sub_cat:
             try:
@@ -650,7 +673,7 @@ if country !='':
             except:
                 df_selection2['ENonResident']=0
                 
-        df_selection2 = df_selection2.T.drop_duplicates().T
+        # df_selection2 = df_selection2.T.drop_duplicates().T
         
     
             
@@ -699,7 +722,9 @@ if country !='':
                 df_selection2['EPaymentOutwards']=(df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[0]]/df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[1]])*100
             except:
                 df_selection2['EPaymentOutwards'] = 0
-        df_selection2 = df_selection2.T.drop_duplicates().T
+        # df_selection2 = df_selection2.T.drop_duplicates().T
+        
+        df_selection2.to_csv('data_df1.csv', index=False)
 
 
         # duplicate_cols = df_selection2.columns[df_selection2.columns.duplicated()]
@@ -834,7 +859,7 @@ st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allo
 
 # data_df5.to_csv('data_df5.csv', index=False)
 data_df5 = pd.read_csv('data_df5.csv')
-
+data_df5 = data_df5.replace(np.nan,0)
 data_df5.fillna(0,inplace=True)
 ls =data_df5.columns.tolist()
 ls3 = (data_df5.filter(like='Index')).columns.tolist()
