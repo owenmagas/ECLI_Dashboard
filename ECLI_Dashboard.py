@@ -42,9 +42,9 @@ st.markdown("<style>\
 # cursor3 = conn.cursor(as_dict=True)
 # cursor4 = conn.cursor(as_dict=True)
 
-# code to run a query on the connected database
+# # code to run a query on the connected database
 # cursor = conn.cursor(as_dict=True)
-# cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+# cursor.execute("""select d.Year,e.Name, a.CategoryName,f.SubCategoryName, f.EcliID as SECLiID, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
 # b.ExchangeRateMeasures,b.Services,
 #        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
 #        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
@@ -60,20 +60,22 @@ st.markdown("<style>\
 #         inner join tblSurvey d
 #         on c.SurveyId = d.Id
 #         inner join tblCountry e
-#         on e.Id = d.CountryId""")
-# data3 = cursor.fetchall()
-# data_df3 = pd.DataFrame(data3)
-# data_df3.to_csv('data_df3.csv', index=False)
+#         on e.Id = d.CountryId
+#         inner join tblSubCategory f
+#         on f.Id = b.SubCategoryId""")
+# data = cursor.fetchall()
+# ecli = pd.DataFrame(data)
+# ecli.to_csv('ecli.csv', index=False)
 
 #reading saved file form database back into the file
-data_df3 = pd.read_csv('data_df3.csv')
-data_df3 = data_df3.replace(np.nan,0)
+ecli = pd.read_csv('ecli.csv')
+ecli = ecli.replace(np.nan,0)
 #replacing none values with zeros
-data_df3.fillna(0, inplace=True)
+# ecli.fillna(0, inplace=True)
 
 #code to direct user to choose a country and showing options for user to choose
 st.write("Choose your country: ")
-country = st.selectbox('Country', options=data_df3['Name'].unique())
+country = st.selectbox('Country', options=ecli['Name'].unique())
 left_co, cent_co,last_co = st.columns(3)
 
 #code to display country flag depending oon user choice
@@ -135,6 +137,7 @@ col1 = st.columns(1)
 col2= st.columns(1)
 
 #selct a sub dataframe with data from the slected country
+data_df3 = ecli.copy()
 data_df3 = data_df3.query('Name == @country')
 if country !='':
     st.markdown("---")
@@ -156,11 +159,13 @@ if country !='':
     #code to create a list containing dataframe columns
     #and list of subset of the columns
     ls =data_df3.columns.tolist()
-    ls1 = ls[7:19]
-    ls2 = ls[7:19]
+    ls1 = ls[9:21]
+    ls2 = ls[9:21]
     # st.write(ls)
     # st.write(ls1)
     # st.write(ls2)
+    # ls1
+    # ls2
     
     #encoding columns to change their names
     for i in range(len(ls1)):
@@ -168,11 +173,11 @@ if country !='':
     df = data_df3.copy()
     # df.info()
     #converting non-numeric alues to numeric
-    df[ls2]= df[ls2].apply(pd.to_numeric, errors='coerce')
+    # df[ls2]= df[ls2].apply(pd.to_numeric, errors='coerce')
     
     #selecting a subset of columns which have Index in their name
     ls3 = (df.filter(like='Index')).columns.tolist()
-    df[ls3]= df[ls3].apply(pd.to_numeric, errors='coerce')
+    # df[ls3]= df[ls3].apply(pd.to_numeric, errors='coerce')
     
     #setting a subset of colums to an initial value of 1
     for i in ls1:
@@ -377,15 +382,16 @@ if country !='':
     # data_df2 = pd.DataFrame(data2)
 
     # data_df2.to_csv('data_df2.csv', index=False)
-    data_df2 = pd.read_csv('data_df2.csv')
-    data_df2 = data_df2.replace(np.nan,0)
+    # data_df2 = pd.read_csv('data_df2.csv')
+    # data_df2 = data_df2.replace(np.nan,0)
+    data_df2 = ecli.copy()
     data_df2 = data_df2.query('Name == @country')
     # data_df3.to_csv('samp5.csv')
     # st.dataframe(data_df3)
     # ds =data_df3.columns.tolist()
     ls8 =data_df2.columns.tolist()
-    ls5 = ls8[7:19]
-    ls6 = ls8[7:19]
+    ls5 = ls8[9:21]
+    ls6 = ls8[9:21]
     for i in range(len(ls5)):
         ls5[i] = 'dd'+ls5[i]
     df5 = data_df2.copy()
@@ -570,16 +576,17 @@ if country !='':
     # data_df4 = pd.DataFrame(data4)
 
     # data_df4.to_csv('data_df4.csv', index=False)
-    data_df4 = pd.read_csv('data_df4.csv')
-    data_df4 = data_df4.replace(np.nan,0)
-    data_df4.to_csv('data_df4.csv', index=False)
+    # data_df4 = pd.read_csv('data_df4.csv')
+    # data_df4 = data_df4.replace(np.nan,0)
+    # data_df4.to_csv('data_df4.csv', index=False)
+    data_df4 = ecli.copy()
     data_df4 = data_df4.query('Name == @country')
     # data_df4.to_csv('data_df4.csv')
     # data_df4 = pd.read_csv('data_df4.csv')
     ls =data_df4.columns.tolist()
     ls3 = (data_df4.filter(like='Index')).columns.tolist()
-    ls1 = ls[7:18]
-    ls2 = ls[7:18]
+    ls1 = ls[9:21]
+    ls2 = ls[9:21]
     for i in range(len(ls1)):
         ls1[i] = 'dd'+ls1[i]
     data_df4[ls2]= data_df4[ls2].apply(pd.to_numeric, errors='coerce')
@@ -858,13 +865,15 @@ st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allo
 # data_df5 = pd.DataFrame(data5)
 
 # data_df5.to_csv('data_df5.csv', index=False)
-data_df5 = pd.read_csv('data_df5.csv')
+# data_df5 = pd.read_csv('data_df5.csv')
+data_df5 = ecli.copy()
+
 data_df5 = data_df5.replace(np.nan,0)
-data_df5.fillna(0,inplace=True)
+# data_df5.fillna(0,inplace=True)
 ls =data_df5.columns.tolist()
 ls3 = (data_df5.filter(like='Index')).columns.tolist()
-ls1 = ls[7:19]
-ls2 = ls[7:19]
+ls1 = ls[9:21]
+ls2 = ls[9:21]
 for i in range(len(ls1)):
     ls1[i] = 'dd'+ls1[i]
 data_df5[ls2]= data_df5[ls2].apply(pd.to_numeric, errors='coerce')
@@ -876,7 +885,7 @@ data_df5['DNormalisedWeight']= data_df5['DNormalisedWeight'].apply(pd.to_numeric
 for i, j in zip(ls2 , ls1):
     data_df5[j] = data_df5[i]*data_df5['DNormalisedWeight']*8
    
-    data_df5['TotWeight'] = data_df5[ls1].sum(axis=1)
+data_df5['TotWeight'] = data_df5[ls1].sum(axis=1)
 data_df5['TotalIndex'] = data_df5[ls3].sum(axis=1)
 # st.dataframe(data_df5)
 df_s2 = ((data_df5.reindex(columns=["Year","Name","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
@@ -1141,3 +1150,36 @@ if len(sub_cat)>0:
 # # if multi_select:
 # #     df3 = df2[df2['Year']== multi_select]
 # #     st.dataframe(df3)
+
+
+
+
+
+
+
+## Table 5
+# x = ecli['CategoryName'].unique().tolist()
+# df
+df_sub = ((df.reindex(columns=["Year","Name","CategoryName","SubCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
+  "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
+  "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
+  "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards",'TotWeight','TotalIndex',]))).groupby(["Year","Name","CategoryName","SubCategoryName"]).sum().reset_index()
+df_sub  = df_sub.query('Name == @country')
+
+df_sub['TotWeight'] = df_sub[ls1].sum(axis=1)
+df_sub['TotalIndex'] = df_sub[ls3].sum(axis=1) 
+# df_sub
+df_sub1 = df_sub.reset_index()
+df_sub1['ECLI'] =(df_sub1['TotalIndex']/df_sub1['TotWeight'])*100
+df_sub1 = df_sub1.query(
+                    "CategoryName == @category_name"
+                )
+df_sub2 = df_sub1[["Year","CategoryName","SubCategoryName",'ECLI']]
+        # st.dataframe(df_s1)
+df_sub2 = df_sub2.pivot(index = ['CategoryName', 'SubCategoryName'], values='ECLI', columns = 'Year')
+df_sub2_ = df_sub2.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                        .format("{:.2f}")
+df_sub2_
