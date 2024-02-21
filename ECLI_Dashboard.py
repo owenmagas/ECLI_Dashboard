@@ -142,30 +142,12 @@ data_df3 = data_df3.query('Name == @country')
 if country !='':
     st.markdown("---")
     # st.markdown("<h2 style='text-align: center;'>ECLI PER CATEGORY</h2>", unsafe_allow_html=True)
-    # cursor.execute("""select b.Year, a.Category, a.[Index] as IDX from tblSummary a
-    # inner join tblSurvey b
-    # on a.SurveyId = b.Id
-    # where Month in ('December')""")
-    # data1 = cursor.fetchall()
-    # data_df1 = pd.DataFrame(data1)
-    # data_df1 = data_df1.groupby(['Category','Year']).sum()
-    # data_df1 =data_df1.reset_index()
-    # data_df1['IDX']=data_df1['IDX'].astype('float')
-    
-    # data_df3.to_csv('samp5.csv')
-    # st.dataframe(data_df3)
-    # ds =data_df3.columns.tolist()
-    
+        
     #code to create a list containing dataframe columns
     #and list of subset of the columns
     ls =data_df3.columns.tolist()
     ls1 = ls[9:21]
     ls2 = ls[9:21]
-    # st.write(ls)
-    # st.write(ls1)
-    # st.write(ls2)
-    # ls1
-    # ls2
     
     #encoding columns to change their names
     for i in range(len(ls1)):
@@ -221,14 +203,7 @@ if country !='':
         "Select category:",
         options = df2['CategoryName'].unique(),
         default = df2['CategoryName'][0]   
-    )
-    
-    # year = st.sidebar.multiselect(
-    #     "Select question:",
-    #     options = df2['Year'].unique(),
-    #     default = df2['Year'][0]  
-    # )
-    
+    ) 
     
         
     if category_name:
