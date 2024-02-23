@@ -66,13 +66,23 @@ b.ExchangeRateMeasures,b.Services,
         on f.Id = b.SubCategoryId""")
 data = cursor.fetchall()
 ecli = pd.DataFrame(data)
+
+
+
 # ecli.to_csv('ecli1.csv', index=False)
 
 #reading saved file form database back into the file
 # ecli = pd.read_csv('ecli1.csv')
 ecli = ecli.replace(np.nan,0)
+ecli.fillna(0, inplace=True)
+
+ls =ecli.columns.tolist()
+# ecli[ls[8:32]].info()
+ecli[ls[8:33]] = ecli[ls[8:33]].astype(float)
+# ecli[ls[8:32]].info()
+
 #replacing none values with zeros
-# ecli.fillna(0, inplace=True)
+
 
 #code to direct user to choose a country and showing options for user to choose
 st.write("Choose your country: ")
