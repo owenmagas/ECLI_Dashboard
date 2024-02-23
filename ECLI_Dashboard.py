@@ -66,7 +66,7 @@ b.ExchangeRateMeasures,b.Services,
         on f.Id = b.SubCategoryId""")
 data = cursor.fetchall()
 ecli = pd.DataFrame(data)
-ecli.to_csv('ecli.csv', index=False)
+ecli.to_csv('ecli1.csv', index=False)
 
 #reading saved file form database back into the file
 ecli = pd.read_csv('ecli1.csv')
