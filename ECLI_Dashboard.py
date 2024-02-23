@@ -32,7 +32,7 @@ st.markdown("<style>\
 conn = pymssql.connect(
     host=r'ecliproject.database.windows.net',
     port = '1433',
-    user=r'sa',
+    user=r'ecli_sa',
     password=r'Password2010',
     database='ECLI'
 )
