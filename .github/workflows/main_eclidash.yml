@@ -22,6 +22,10 @@ jobs:
         with:
           python-version: '3.11'
 
+      
+          using: 'node20'
+          main: 'main.js'
+          
       - name: Create and start virtual environment
         run: |
           python -m venv venv
