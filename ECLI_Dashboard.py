@@ -17,7 +17,7 @@ import holoviews as hv
 hv.extension('bokeh')
 
 # code to display headings on the page
-st.set_page_config(page_title='SADC Countries ECLI Dashboard', page_icon = ":globe_with_meridians:", layout = "wide", )
+st.set_page_config(page_title='SADC Countries ECLI 1 Dashboard', page_icon = ":globe_with_meridians:", layout = "wide", )
 st.markdown("<h1 style='text-align: center;'>SADC COUNTRIES ECLI DASHBOARD</h1>", unsafe_allow_html=True)
 
 # cosde to style the background iage of the page
