@@ -29,43 +29,44 @@ st.markdown("<style>\
 </style>", unsafe_allow_html=True)
 
 ## code to connect to a Microsoft SQL Server database using mssql python library
-# conn = pymssql.connect(
-#     host=r'10.16.65.18',
-#     user=r'sa',
-#     password=r'Password2010',
-#     database='ECLI'
-# )
+conn = pymssql.connect(
+    host=r'ecliproject.database.windows.net',
+    port = '1433',
+    user=r'sa',
+    password=r'Password2010',
+    database='ECLI'
+)
 
-# cursor = conn.cursor(as_dict=True)
-# cursor1 = conn.cursor(as_dict=True)
-# cursor2 = conn.cursor(as_dict=True)
-# cursor3 = conn.cursor(as_dict=True)
-# cursor4 = conn.cursor(as_dict=True)
+cursor = conn.cursor(as_dict=True)
+cursor1 = conn.cursor(as_dict=True)
+cursor2 = conn.cursor(as_dict=True)
+cursor3 = conn.cursor(as_dict=True)
+cursor4 = conn.cursor(as_dict=True)
 
-# # code to run a query on the connected database
-# cursor = conn.cursor(as_dict=True)
-# cursor.execute("""select d.Year,e.Name, a.CategoryName,f.SubCategoryName, f.EcliID as SECLiID, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-# b.ExchangeRateMeasures,b.Services,
-#        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
-#        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
-#        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
-#        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-#        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-#        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-#        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-#         inner join tblQuestion b
-#         on a.Id = b.CategoryId
-#         inner join tblAnswer c
-#         on b.QuestionId = c.QuestionId
-#         inner join tblSurvey d
-#         on c.SurveyId = d.Id
-#         inner join tblCountry e
-#         on e.Id = d.CountryId
-#         inner join tblSubCategory f
-#         on f.Id = b.SubCategoryId""")
-# data = cursor.fetchall()
-# ecli = pd.DataFrame(data)
-# ecli.to_csv('ecli.csv', index=False)
+# code to run a query on the connected database
+cursor = conn.cursor(as_dict=True)
+cursor.execute("""select d.Year,e.Name, a.CategoryName,f.SubCategoryName, f.EcliID as SECLiID, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+b.ExchangeRateMeasures,b.Services,
+       b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+       b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+       b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+       c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+       c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+       c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+       c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+        inner join tblQuestion b
+        on a.Id = b.CategoryId
+        inner join tblAnswer c
+        on b.QuestionId = c.QuestionId
+        inner join tblSurvey d
+        on c.SurveyId = d.Id
+        inner join tblCountry e
+        on e.Id = d.CountryId
+        inner join tblSubCategory f
+        on f.Id = b.SubCategoryId""")
+data = cursor.fetchall()
+ecli = pd.DataFrame(data)
+ecli.to_csv('ecli.csv', index=False)
 
 #reading saved file form database back into the file
 ecli = pd.read_csv('ecli1.csv')
@@ -1157,4 +1158,5 @@ df_sub2_ = df_sub2.style.highlight_between(left=0.0, right = 10.1, color = 'gree
                         .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
-df_sub2_
+                        
+st.table(df_sub2_)
