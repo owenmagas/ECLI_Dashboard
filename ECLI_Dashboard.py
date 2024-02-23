@@ -66,10 +66,10 @@ b.ExchangeRateMeasures,b.Services,
         on f.Id = b.SubCategoryId""")
 data = cursor.fetchall()
 ecli = pd.DataFrame(data)
-ecli.to_csv('ecli1.csv', index=False)
+# ecli.to_csv('ecli1.csv', index=False)
 
 #reading saved file form database back into the file
-ecli = pd.read_csv('ecli1.csv')
+# ecli = pd.read_csv('ecli1.csv')
 ecli = ecli.replace(np.nan,0)
 #replacing none values with zeros
 # ecli.fillna(0, inplace=True)
@@ -112,7 +112,7 @@ elif country=='Tanzania':
         st.image("Tanzania.png", caption='TANZANIA')
 elif country=='South Africa':
     with cent_co:        
-        st.image("South Africa.png", caption='SOUNTH AFRICA')
+        st.image("South_Africa.png", caption='SOUTH AFRICA')
 elif country=='Namibia':
     with cent_co:        
         st.image("Namibia.png", caption='NAMIBIA')
