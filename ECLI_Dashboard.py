@@ -823,6 +823,38 @@ else:
 
 
 
+## Table 5
+# x = ecli['CategoryName'].unique().tolist()
+# df
+df_sub = ((df.reindex(columns=["Year","Name","CategoryName","SubCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
+  "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
+  "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
+  "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards",'TotWeight','TotalIndex',]))).groupby(["Year","Name","CategoryName","SubCategoryName"]).sum().reset_index()
+df_sub  = df_sub.query('Name == @country')
+
+df_sub['TotWeight'] = df_sub[ls1].sum(axis=1)
+df_sub['TotalIndex'] = df_sub[ls3].sum(axis=1) 
+# df_sub
+df_sub1 = df_sub.reset_index()
+df_sub1['ECLI'] =(df_sub1['TotalIndex']/df_sub1['TotWeight'])*100
+df_sub1 = df_sub1.query(
+                    "CategoryName == @category_name"
+                )
+df_sub2 = df_sub1[["Year","CategoryName","SubCategoryName",'ECLI']]
+        # st.dataframe(df_s1)
+df_sub2 = df_sub2.pivot(index = ['CategoryName', 'SubCategoryName'], values='ECLI', columns = 'Year')
+df_sub2_ = df_sub2.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                        .format("{:.2f}")
+                        
+st.dataframe(df_sub2_)
+
+
+
+
+
 
 
 
@@ -1147,30 +1179,3 @@ if len(sub_cat)>0:
 
 
 
-## Table 5
-# x = ecli['CategoryName'].unique().tolist()
-# df
-df_sub = ((df.reindex(columns=["Year","Name","CategoryName","SubCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
-  "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
-  "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
-  "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards",'TotWeight','TotalIndex',]))).groupby(["Year","Name","CategoryName","SubCategoryName"]).sum().reset_index()
-df_sub  = df_sub.query('Name == @country')
-
-df_sub['TotWeight'] = df_sub[ls1].sum(axis=1)
-df_sub['TotalIndex'] = df_sub[ls3].sum(axis=1) 
-# df_sub
-df_sub1 = df_sub.reset_index()
-df_sub1['ECLI'] =(df_sub1['TotalIndex']/df_sub1['TotWeight'])*100
-df_sub1 = df_sub1.query(
-                    "CategoryName == @category_name"
-                )
-df_sub2 = df_sub1[["Year","CategoryName","SubCategoryName",'ECLI']]
-        # st.dataframe(df_s1)
-df_sub2 = df_sub2.pivot(index = ['CategoryName', 'SubCategoryName'], values='ECLI', columns = 'Year')
-df_sub2_ = df_sub2.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
-                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
-                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
-                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
-                        .format("{:.2f}")
-                        
-st.table(df_sub2_)
