@@ -86,7 +86,7 @@ ecli[ls[8:33]] = ecli[ls[8:33]].astype(float)
 
 #code to direct user to choose a country and showing options for user to choose
 st.write("Choose your country: ")
-c = data_df3['Name'].unique()
+c = ecli['Name'].unique()
 c = list(c)
 c.sort()
 # st.write(c)
