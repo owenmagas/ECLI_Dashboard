@@ -86,7 +86,11 @@ ecli[ls[8:33]] = ecli[ls[8:33]].astype(float)
 
 #code to direct user to choose a country and showing options for user to choose
 st.write("Choose your country: ")
-country = st.selectbox('Country', options=ecli['Name'].unique())
+c = data_df3['Name'].unique()
+c = list(c)
+c.sort()
+# st.write(c)
+country = st.selectbox('Country', options=c)
 left_co, cent_co,last_co = st.columns(3)
 
 #code to display country flag depending oon user choice
