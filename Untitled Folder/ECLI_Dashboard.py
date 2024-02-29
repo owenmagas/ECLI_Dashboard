@@ -17,7 +17,7 @@ import holoviews as hv
 hv.extension('bokeh')
 
 # code to display headings on the page
-st.set_page_config(page_title='SADC Countries ECLI 1 Dashboard', page_icon = ":globe_with_meridians:", layout = "wide", )
+st.set_page_config(page_title='SADC Countries ECLI Dashboard', page_icon = ":globe_with_meridians:", layout = "wide", )
 st.markdown("<h1 style='text-align: center;'>SADC COUNTRIES ECLI DASHBOARD</h1>", unsafe_allow_html=True)
 
 # cosde to style the background iage of the page
@@ -29,64 +29,51 @@ st.markdown("<style>\
 </style>", unsafe_allow_html=True)
 
 ## code to connect to a Microsoft SQL Server database using mssql python library
-conn = pymssql.connect(
-    host=r'ecliproject.database.windows.net',
-    port = '1433',
-    user=r'ecli_sa',
-    password=r'Password2010',
-    database='ECLI'
-)
+# conn = pymssql.connect(
+#     host=r'10.16.65.18',
+#     user=r'sa',
+#     password=r'Password2010',
+#     database='ECLI'
+# )
 
-cursor = conn.cursor(as_dict=True)
-cursor1 = conn.cursor(as_dict=True)
-cursor2 = conn.cursor(as_dict=True)
-cursor3 = conn.cursor(as_dict=True)
-cursor4 = conn.cursor(as_dict=True)
+# cursor = conn.cursor(as_dict=True)
+# cursor1 = conn.cursor(as_dict=True)
+# cursor2 = conn.cursor(as_dict=True)
+# cursor3 = conn.cursor(as_dict=True)
+# cursor4 = conn.cursor(as_dict=True)
 
 # code to run a query on the connected database
-cursor = conn.cursor(as_dict=True)
-cursor.execute("""select d.Year,e.Name, a.CategoryName,f.SubCategoryName, f.EcliID as SECLiID, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
-b.ExchangeRateMeasures,b.Services,
-       c.Goods, c.FinancialSector, c.CapitalAccount, c.AppliestoAll,
-       c.Resident, c.NonResident, c.PaymentInwards, c.PaymentOutwards,
-       c.TradeInwards, c.TradeOutwards,c.ServicesIndex,
-       c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
-       c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
-       c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
-       c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
-        inner join tblQuestion b
-        on a.Id = b.CategoryId
-        inner join tblAnswer c
-        on b.QuestionId = c.QuestionId
-        inner join tblSurvey d
-        on c.SurveyId = d.Id
-        inner join tblCountry e
-        on e.Id = d.CountryId
-        inner join tblSubCategory f
-        on f.Id = b.SubCategoryId""")
-data = cursor.fetchall()
-ecli = pd.DataFrame(data)
-
-
-
-# ecli.to_csv('ecli1.csv', index=False)
+# cursor = conn.cursor(as_dict=True)
+# cursor.execute("""select d.Year,e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
+# b.ExchangeRateMeasures,b.Services,
+#        b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
+#        b.Resident, b.NonResident, b.PaymentInwards, b.PaymentOutwards,
+#        b.TradeInwards, b.TradeOutwards,c.ServicesIndex,
+#        c.AppliestoAllIndex, c.ResidentIndex, c.PaymentOutwardsIndex,
+#        c.ExchangeRateMeasuresIndex, c.NonResidentIndex, c.PaymentInwardsIndex,
+#        c.FinancialSectorIndex, c.CapitalAccountIndex, c.TradeInwardsIndex,
+#        c.TradeOutwardsIndex, c.GoodsIndex   from tblCategory a
+#         inner join tblQuestion b
+#         on a.Id = b.CategoryId
+#         inner join tblAnswer c
+#         on b.QuestionId = c.QuestionId
+#         inner join tblSurvey d
+#         on c.SurveyId = d.Id
+#         inner join tblCountry e
+#         on e.Id = d.CountryId""")
+# data3 = cursor.fetchall()
+# data_df3 = pd.DataFrame(data3)
+# data_df3.to_csv('data_df3.csv', index=False)
 
 #reading saved file form database back into the file
-# ecli = pd.read_csv('ecli1.csv')
-ecli = ecli.replace(np.nan,0)
-ecli.fillna(0, inplace=True)
-
-ls =ecli.columns.tolist()
-# ecli[ls[8:32]].info()
-ecli[ls[8:33]] = ecli[ls[8:33]].astype(float)
-# ecli[ls[8:32]].info()
-
+data_df3 = pd.read_csv('data_df3.csv')
+data_df3 = data_df3.replace(np.nan,0)
 #replacing none values with zeros
-
+data_df3.fillna(0, inplace=True)
 
 #code to direct user to choose a country and showing options for user to choose
 st.write("Choose your country: ")
-c = ecli['Name'].unique()
+c = data_df3['Name'].unique()
 c = list(c)
 c.sort()
 # st.write(c)
@@ -126,7 +113,7 @@ elif country=='Tanzania':
         st.image("Tanzania.png", caption='TANZANIA')
 elif country=='South Africa':
     with cent_co:        
-        st.image("South_Africa.png", caption='SOUTH AFRICA')
+        st.image("South Africa.png", caption='SOUNTH AFRICA')
 elif country=='Namibia':
     with cent_co:        
         st.image("Namibia.png", caption='NAMIBIA')
@@ -152,17 +139,32 @@ col1 = st.columns(1)
 col2= st.columns(1)
 
 #selct a sub dataframe with data from the slected country
-data_df3 = ecli.copy()
 data_df3 = data_df3.query('Name == @country')
 if country !='':
     st.markdown("---")
     # st.markdown("<h2 style='text-align: center;'>ECLI PER CATEGORY</h2>", unsafe_allow_html=True)
-        
+    # cursor.execute("""select b.Year, a.Category, a.[Index] as IDX from tblSummary a
+    # inner join tblSurvey b
+    # on a.SurveyId = b.Id
+    # where Month in ('December')""")
+    # data1 = cursor.fetchall()
+    # data_df1 = pd.DataFrame(data1)
+    # data_df1 = data_df1.groupby(['Category','Year']).sum()
+    # data_df1 =data_df1.reset_index()
+    # data_df1['IDX']=data_df1['IDX'].astype('float')
+    
+    # data_df3.to_csv('samp5.csv')
+    # st.dataframe(data_df3)
+    # ds =data_df3.columns.tolist()
+    
     #code to create a list containing dataframe columns
     #and list of subset of the columns
     ls =data_df3.columns.tolist()
-    ls1 = ls[9:21]
-    ls2 = ls[9:21]
+    ls1 = ls[7:19]
+    ls2 = ls[7:19]
+    # st.write(ls)
+    # st.write(ls1)
+    # st.write(ls2)
     
     #encoding columns to change their names
     for i in range(len(ls1)):
@@ -170,11 +172,11 @@ if country !='':
     df = data_df3.copy()
     # df.info()
     #converting non-numeric alues to numeric
-    # df[ls2]= df[ls2].apply(pd.to_numeric, errors='coerce')
+    df[ls2]= df[ls2].apply(pd.to_numeric, errors='coerce')
     
     #selecting a subset of columns which have Index in their name
     ls3 = (df.filter(like='Index')).columns.tolist()
-    # df[ls3]= df[ls3].apply(pd.to_numeric, errors='coerce')
+    df[ls3]= df[ls3].apply(pd.to_numeric, errors='coerce')
     
     #setting a subset of colums to an initial value of 1
     for i in ls1:
@@ -218,7 +220,14 @@ if country !='':
         "Select category:",
         options = df2['CategoryName'].unique(),
         default = df2['CategoryName'][0]   
-    ) 
+    )
+    
+    # year = st.sidebar.multiselect(
+    #     "Select question:",
+    #     options = df2['Year'].unique(),
+    #     default = df2['Year'][0]  
+    # )
+    
     
         
     if category_name:
@@ -292,33 +301,36 @@ if country !='':
     
         df_s1 = df_s[["Year","CategoryName",'ECLI']]
         # st.dataframe(df_s1)
-        df_s1 = df_s1.pivot(index = 'CategoryName', values='ECLI', columns = 'Year')
-        df_s1_ = df_s1.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
-                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
-                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
-                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
-                        .format("{:.2f}")
-        st.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
-        st.table(df_s1_)
-        fig_df_s = px.bar(
-            df_s,
-            x = 'Year',
-            y = 'ECLI',
-            color = 'CategoryName',
-            title = "<b>ECLI by category and year</b>",
-            barmode = 'group',
-            # color_discrete_sequence = ["#0083B8"]*len(df_s),
-            template = "plotly_white", 
-        )
-        fig_df_s.update_layout(
-            xaxis=dict(tickmode="linear"),
-            plot_bgcolor="rgba(0,0,0,0)",
-            yaxis=(dict(showgrid=False)),
-            height = 800,
-            
-        )
-        st.plotly_chart(fig_df_s, use_container_width=True)
-        # st.plotly_chart(fig_df_s)
+        with st.expander("Category"):
+            df_s1 = df_s1.pivot(index = 'CategoryName', values='ECLI', columns = 'Year')
+            df_s1_ = df_s1.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                            .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                            .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                            .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                            .format("{:.2f}")
+            st.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
+            st.table(df_s1_)
+        
+        with st.expander("category Graph"):
+            fig_df_s = px.bar(
+                df_s,
+                x = 'Year',
+                y = 'ECLI',
+                color = 'CategoryName',
+                title = "<b>ECLI by category and year</b>",
+                barmode = 'group',
+                # color_discrete_sequence = ["#0083B8"]*len(df_s),
+                template = "plotly_white", 
+            )
+            fig_df_s.update_layout(
+                xaxis=dict(tickmode="linear"),
+                plot_bgcolor="rgba(0,0,0,0)",
+                yaxis=(dict(showgrid=False)),
+                height = 800,
+                
+            )
+            st.plotly_chart(fig_df_s, use_container_width=True)
+            # st.plotly_chart(fig_df_s)
     except:
         st.warning("No Main Category ECLIs to show: You did not select anything")
 
@@ -372,16 +384,15 @@ if country !='':
     # data_df2 = pd.DataFrame(data2)
 
     # data_df2.to_csv('data_df2.csv', index=False)
-    # data_df2 = pd.read_csv('data_df2.csv')
-    # data_df2 = data_df2.replace(np.nan,0)
-    data_df2 = ecli.copy()
+    data_df2 = pd.read_csv('data_df2.csv')
+    data_df2 = data_df2.replace(np.nan,0)
     data_df2 = data_df2.query('Name == @country')
     # data_df3.to_csv('samp5.csv')
     # st.dataframe(data_df3)
     # ds =data_df3.columns.tolist()
     ls8 =data_df2.columns.tolist()
-    ls5 = ls8[9:21]
-    ls6 = ls8[9:21]
+    ls5 = ls8[7:19]
+    ls6 = ls8[7:19]
     for i in range(len(ls5)):
         ls5[i] = 'dd'+ls5[i]
     df5 = data_df2.copy()
@@ -503,7 +514,8 @@ if country !='':
                         .format("{:.2f}")
                         
         st.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
-        st.table(df_s9)
+        with st.expander("SubCategory"):
+            st.table(df_s9)
 
 
 
@@ -525,7 +537,8 @@ if country !='':
         )
 
         # st.plotly_chart(fig_df_s7)
-        st.plotly_chart(fig_df_s7, use_container_width=True)
+        with st.expander("subcategory Graph"):
+            st.plotly_chart(fig_df_s7, use_container_width=True)
     except:
         st.warning("No subcategory ECLIs to show: You did not select anything")
 
@@ -566,17 +579,16 @@ if country !='':
     # data_df4 = pd.DataFrame(data4)
 
     # data_df4.to_csv('data_df4.csv', index=False)
-    # data_df4 = pd.read_csv('data_df4.csv')
-    # data_df4 = data_df4.replace(np.nan,0)
-    # data_df4.to_csv('data_df4.csv', index=False)
-    data_df4 = ecli.copy()
+    data_df4 = pd.read_csv('data_df4.csv')
+    data_df4 = data_df4.replace(np.nan,0)
+    data_df4.to_csv('data_df4.csv', index=False)
     data_df4 = data_df4.query('Name == @country')
     # data_df4.to_csv('data_df4.csv')
     # data_df4 = pd.read_csv('data_df4.csv')
     ls =data_df4.columns.tolist()
     ls3 = (data_df4.filter(like='Index')).columns.tolist()
-    ls1 = ls[9:21]
-    ls2 = ls[9:21]
+    ls1 = ls[7:18]
+    ls2 = ls[7:18]
     for i in range(len(ls1)):
         ls1[i] = 'dd'+ls1[i]
     data_df4[ls2]= data_df4[ls2].apply(pd.to_numeric, errors='coerce')
@@ -792,7 +804,8 @@ if country !='':
                     
                     
         st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
-        st.table(df17)
+        with st.expander("sector"):
+            st.table(df17)
     else:
         select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
         select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
@@ -806,7 +819,8 @@ if country !='':
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
         st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
-        st.table(dfs3)
+        with st.expander("sector Graph"):
+            st.table(dfs3)
     # st.dataframe(data_df4)
     # # multi_select = st.multiselect('Choose Category', options=('2020', '2021','amazon','oracle'))
     # # multi_select1 = st.multiselect('Choose Year', options=('MICRosoft', 'Apple','amazon','oracle'))
@@ -818,38 +832,6 @@ else:
     st.warning("No Sector ECLIs to show: No valid selection was done")
     
 
-
-
-
-
-
-## Table 5
-# x = ecli['CategoryName'].unique().tolist()
-# df
-df_sub = ((df.reindex(columns=["Year","Name","CategoryName","SubCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
-  "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
-  "GoodsIndex", "ddExchangeRateMeasures", "ddServices", "ddGoods", "ddFinancialSector", "ddCapitalAccount", "ddAppliestoAll",\
-  "ddResident", "ddNonResident", "ddPaymentInwards", "ddPaymentOutwards", "ddTradeInwards", "ddTradeOutwards",'TotWeight','TotalIndex',]))).groupby(["Year","Name","CategoryName","SubCategoryName"]).sum().reset_index()
-df_sub  = df_sub.query('Name == @country')
-
-df_sub['TotWeight'] = df_sub[ls1].sum(axis=1)
-df_sub['TotalIndex'] = df_sub[ls3].sum(axis=1) 
-# df_sub
-df_sub1 = df_sub.reset_index()
-df_sub1['ECLI'] =(df_sub1['TotalIndex']/df_sub1['TotWeight'])*100
-df_sub1 = df_sub1.query(
-                    "CategoryName == @category_name"
-                )
-df_sub2 = df_sub1[["Year","CategoryName","SubCategoryName",'ECLI']]
-        # st.dataframe(df_s1)
-df_sub2 = df_sub2.pivot(index = ['CategoryName', 'SubCategoryName'], values='ECLI', columns = 'Year')
-df_sub2_ = df_sub2.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
-                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
-                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
-                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
-                        .format("{:.2f}")
-                        
-st.dataframe(df_sub2_)
 
 
 
@@ -887,15 +869,13 @@ st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allo
 # data_df5 = pd.DataFrame(data5)
 
 # data_df5.to_csv('data_df5.csv', index=False)
-# data_df5 = pd.read_csv('data_df5.csv')
-data_df5 = ecli.copy()
-
+data_df5 = pd.read_csv('data_df5.csv')
 data_df5 = data_df5.replace(np.nan,0)
 # data_df5.fillna(0,inplace=True)
 ls =data_df5.columns.tolist()
 ls3 = (data_df5.filter(like='Index')).columns.tolist()
-ls1 = ls[9:21]
-ls2 = ls[9:21]
+ls1 = ls[7:19]
+ls2 = ls[7:19]
 for i in range(len(ls1)):
     ls1[i] = 'dd'+ls1[i]
 data_df5[ls2]= data_df5[ls2].apply(pd.to_numeric, errors='coerce')
@@ -907,7 +887,7 @@ data_df5['DNormalisedWeight']= data_df5['DNormalisedWeight'].apply(pd.to_numeric
 for i, j in zip(ls2 , ls1):
     data_df5[j] = data_df5[i]*data_df5['DNormalisedWeight']*8
    
-data_df5['TotWeight'] = data_df5[ls1].sum(axis=1)
+    data_df5['TotWeight'] = data_df5[ls1].sum(axis=1)
 data_df5['TotalIndex'] = data_df5[ls3].sum(axis=1)
 # st.dataframe(data_df5)
 df_s2 = ((data_df5.reindex(columns=["Year","Name","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
@@ -1130,7 +1110,8 @@ if len(sub_cat)>0:
             z = df13.columns[2]
 
             st.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs PER SECTOR</h3>", unsafe_allow_html=True)
-            st.table(df15)
+            with st.expander("countries"):
+                st.table(df15)
             
             if year:
                 df16 = df13_1.query(
@@ -1156,7 +1137,8 @@ if len(sub_cat)>0:
             )
             
             # st.plotly_chart(fig_df_s16)
-            st.plotly_chart(fig_df_s16, use_container_width=True)
+            with st.expander("country Graph"):
+                st.plotly_chart(fig_df_s16, use_container_width=True)
         except:
             st.warning("No Country ECLIs to show: There is no valid data")
 # else:
@@ -1172,10 +1154,3 @@ if len(sub_cat)>0:
 # # if multi_select:
 # #     df3 = df2[df2['Year']== multi_select]
 # #     st.dataframe(df3)
-
-
-
-
-
-
-
