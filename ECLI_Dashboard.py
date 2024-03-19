@@ -4,7 +4,7 @@ from pandas.api.types import (
     is_numeric_dtype,
     is_object_dtype,
 )
-import os
+
 from datetime import datetime
 import json
 import requests
