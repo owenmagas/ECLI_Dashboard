@@ -10,5 +10,4 @@ streamlit==1.31.1
 datetime
 json
 requests
-webbrowser
 msal
