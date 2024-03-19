@@ -4,6 +4,12 @@ from pandas.api.types import (
     is_numeric_dtype,
     is_object_dtype,
 )
+import os
+from datetime import datetime
+import json
+import requests
+import webbrowser
+import msal
 import pandas as pd 
 import pymssql 
 import streamlit as st 
@@ -66,6 +72,35 @@ b.ExchangeRateMeasures,b.Services,
         on f.Id = b.SubCategoryId""")
 data = cursor.fetchall()
 ecli = pd.DataFrame(data)
+
+GRAPH_API_ENDPOINT = 'https://graph.microsoft.com/v1.0'
+
+def generate_access_token(app_id, scopes):
+    access_token_cache  = msal.SerializableTokenCache()
+    
+    #read toke file
+    if os.path.exists('api_token_access.json'):
+        access_token_cache.deserialize(open('api_token_access.json', 'r').read())
+        token_detail = json.load(open('api_token_access.json',))
+        token_detail_key = list(token_detail['AccessToken'].keys())[0]
+        token_expiration = datetime.fromtimestamp(int(token_detail['AccessToken'][token_detail_key]['expires_on']))
+        if datetime.now() > token_expiration:
+            os.remove('api_token_access.json')
+            access_token_cache = msal.SerializableTokenCache()
+    client = msal.PublicClientApplication(client_id = APP_ID, token_cache = access_token_cache)
+    accounts = client.get_accounts()
+    if accounts:
+        token_response = client.acquire_token_silent(scopes, account = accounts[0])
+    else:
+        flow = client.initiate_device_flow(scopes = SCOPES)
+        print('user code: ' + flow['user_code'])
+        webbrowser.open('https://microsoft.com/devicelogin')
+        token_response = client.acquire_token_by_device_flow(flow)
+        # print(token_response)
+
+    with open('api_token_access.json', 'w') as f:
+        f.write(access_token_cache.serialize())
+    return token_response
 
 
 
@@ -504,7 +539,7 @@ if country !='':
                         
         st.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
         st.table(df_s9)
-
+        df_s7.to_csv('file1.csv')
 
 
         fig_df_s7 = px.bar(
@@ -721,7 +756,7 @@ if country !='':
                 df_selection2['EPaymentOutwards'] = 0
         # df_selection2 = df_selection2.T.drop_duplicates().T
         
-        df_selection2.to_csv('data_df1.csv', index=False)
+        # df_selection2.to_csv('data_df1.csv', index=False)
 
 
         # duplicate_cols = df_selection2.columns[df_selection2.columns.duplicated()]
@@ -789,7 +824,7 @@ if country !='':
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")\
                         .set_caption('Subcategory ECLI')
-                    
+        df16.to_csv('file2.csv')
                     
         st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
         st.table(df17)
@@ -848,6 +883,7 @@ df_sub2_ = df_sub2.style.highlight_between(left=0.0, right = 10.1, color = 'gree
                         .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
+df_sub1.to_csv('file3.csv')
                         
 st.dataframe(df_sub2_)
 
@@ -1126,6 +1162,7 @@ if len(sub_cat)>0:
                         .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
+            df14.to_csv('file4.csv')
                     
             z = df13.columns[2]
 
@@ -1173,7 +1210,60 @@ if len(sub_cat)>0:
 # #     df3 = df2[df2['Year']== multi_select]
 # #     st.dataframe(df3)
 
+APP_ID = '4562dbbd-c2c6-4785-9309-aab7427b5d4d'
+SCOPES  = ['Files.ReadWrite']
 
+access_token = generate_access_token(APP_ID, SCOPES)
+
+headers = {
+    'Authorization' :'Bearer' + access_token['access_token']
+    
+}
+
+file_path = r'file4.csv'
+file_name = os.path.basename(file_path)
+with open(file_path,'rb') as upload:
+    media_content = upload.read()
+
+response  = requests.put(
+    GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name}:/content',
+    headers = headers,
+    data = media_content
+)
+
+file_path1 = r'file1.csv'
+file_name1 = os.path.basename(file_path1)
+with open(file_path1,'rb') as upload:
+    media_content = upload.read()
+
+response  = requests.put(
+    GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name1}:/content',
+    headers = headers,
+    data = media_content
+)
+
+file_path2 = r'file2.csv'
+file_name2 = os.path.basename(file_path2)
+with open(file_path2,'rb') as upload:
+    media_content = upload.read()
+
+response  = requests.put(
+    GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name2}:/content',
+    headers = headers,
+    data = media_content
+)
+
+file_path3 = r'file3.csv'
+file_name3 = os.path.basename(file_path3)
+with open(file_path3,'rb') as upload:
+    media_content = upload.read()
+
+response  = requests.put(
+    GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name3}:/content',
+    headers = headers,
+    data = media_content
+)
+#print(response.json())
 
 
 
