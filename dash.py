@@ -35,20 +35,20 @@ st.markdown("<style>\
 </style>", unsafe_allow_html=True)
 
 ## code to connect to a Microsoft SQL Server database using mssql python library
-conn = pymssql.connect(
-    host=r'ecliproject.database.windows.net',
-    port = '1433',
-    user=r'ecli_sa',
-    password=r'Password2010',
-    database='ECLI'
-)
-
 # conn = pymssql.connect(
-#     host=r'10.16.65.18',
-#     user=r'sa',
+#     host=r'ecliproject.database.windows.net',
+#     port = '1433',
+#     user=r'ecli_sa',
 #     password=r'Password2010',
 #     database='ECLI'
 # )
+
+conn = pymssql.connect(
+    host=r'10.16.65.18',
+    user=r'sa',
+    password=r'Password2010',
+    database='ECLI'
+)
 
 cursor = conn.cursor(as_dict=True)
 cursor1 = conn.cursor(as_dict=True)
@@ -126,7 +126,6 @@ ecli[ls[8:33]] = ecli[ls[8:33]].astype(float)
 #replacing none values with zeros
 
 
-
 #code to direct user to choose a country and showing options for user to choose
 st.write("Choose your country: ")
 c = ecli['Name'].unique()
@@ -180,8 +179,6 @@ else:
     with cent_co:        
         st.image(f"{country}.png", caption=country) 
     
-    
-tab1,tab2,tab3 = st.tabs(['Selected Country Graphs', 'Selected Country Tables', 'Comparative table'])
 
 # cursor.execute("""select b.Year, a.Category, a.[Index] as IDX from tblSummary a
 # inner join tblSurvey b
@@ -262,7 +259,7 @@ if country !='':
     category_name = st.sidebar.multiselect(
         "Select category:",
         options = df2['CategoryName'].unique(),
-        default = df2['CategoryName'][0]   
+        default = df2['CategoryName']  
     ) 
     
         
@@ -343,26 +340,26 @@ if country !='':
                         .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
-        tab2.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
-        tab2.table(df_s1_)
-        fig_df_s = px.bar(
-            df_s,
-            x = 'Year',
-            y = 'ECLI',
-            color = 'CategoryName',
-            title = "<b>ECLI by category and year</b>",
-            barmode = 'group',
-            # color_discrete_sequence = ["#0083B8"]*len(df_s),
-            template = "plotly_white", 
-        )
-        fig_df_s.update_layout(
-            xaxis=dict(tickmode="linear"),
-            plot_bgcolor="rgba(0,0,0,0)",
-            yaxis=(dict(showgrid=False)),
-            height = 800,
+        st.markdown("<h3 style='text-align: center;'>MAIN CATEGORY ECLIs</h3>", unsafe_allow_html=True)
+        st.table(df_s1_)
+        # fig_df_s = px.bar(
+        #     df_s,
+        #     x = 'Year',
+        #     y = 'ECLI',
+        #     color = 'CategoryName',
+        #     title = "<b>ECLI by category and year</b>",
+        #     barmode = 'group',
+        #     # color_discrete_sequence = ["#0083B8"]*len(df_s),
+        #     template = "plotly_white", 
+        # )
+        # fig_df_s.update_layout(
+        #     xaxis=dict(tickmode="linear"),
+        #     plot_bgcolor="rgba(0,0,0,0)",
+        #     yaxis=(dict(showgrid=False)),
+        #     height = 800,
             
-        )
-        tab1.plotly_chart(fig_df_s, use_container_width=True)
+        # )
+        # st.plotly_chart(fig_df_s, use_container_width=True)
         # st.plotly_chart(fig_df_s)
     except:
         st.warning("No Main Category ECLIs to show: You did not select anything")
@@ -392,12 +389,10 @@ if country !='':
 
 
 
-    tab1.markdown("---")
-    tab2.markdown("---")
+    st.markdown("---")
 
 
-    tab1.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
-    tab2.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>ECLI PER SUBCATEGORY</h2>", unsafe_allow_html=True)
     # cursor.execute("""select d.Year,e.Name, a.SubCategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
     # b.ExchangeRateMeasures,b.Services,
     #     b.Goods, b.FinancialSector, b.CapitalAccount, b.AppliestoAll,
@@ -467,7 +462,7 @@ if country !='':
     subcategory_name = st.sidebar.multiselect(
         "Select SubCategory:",
         options = df7['SubCategoryName'].unique(),
-        default = df7['SubCategoryName'][0]   
+        default = df7['SubCategoryName']  
     )
 
     # year = st.sidebar.multiselect(
@@ -520,8 +515,7 @@ if country !='':
     # else:
     #     st.markdown('No data found')
         
-    tab1.markdown("---")
-    tab2.markdown("---")
+    st.markdown("---")
 
     ls9 = ["Year","SCategoryName","ServicesIndex", "AppliestoAllIndex", "ResidentIndex", "PaymentOutwardsIndex", "ExchangeRateMeasuresIndex",\
     "NonResidentIndex", "PaymentInwardsIndex", "FinancialSectorIndex", "CapitalAccountIndex", "TradeInwardsIndex", "TradeOutwardsIndex",\
@@ -550,32 +544,30 @@ if country !='':
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
                         
-        tab1.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
-        tab2.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
-        tab2.table(df_s9)
+        st.markdown("<h3 style='text-align: center;'>SUBCATEGORY ECLIs</h3>", unsafe_allow_html=True)
+        st.table(df_s9)
         df_s7.to_csv('file1.csv')
-        
 
-        fig_df_s7 = px.bar(
-            df_s7,
-            y = 'ECLI',
-            x = 'Year',
-            color = 'ECLI',
-            title = "<b>ECLI by Products</b>",
-            barmode = 'group',
-            # color_discrete_sequence = ["#0083B8"]*len(df_s7),
-            template = "plotly_white",
-            hover_name='SubCategoryName'
-        )
-        fig_df_s7.update_layout(
-            xaxis=dict(tickmode="linear"),
-            plot_bgcolor="rgba(0,0,0,0)",
-            yaxis=(dict(showgrid=False)),
-            height = 800,
-        )
+
+        # fig_df_s7 = px.bar(
+        #     df_s7,
+        #     y = 'ECLI',
+        #     x = 'Year',
+        #     color = 'SubCategoryName',
+        #     title = "<b>ECLI by Products</b>",
+        #     barmode = 'group',
+        #     # color_discrete_sequence = ["#0083B8"]*len(df_s7),
+        #     template = "plotly_white"
+        # )
+        # fig_df_s7.update_layout(
+        #     xaxis=dict(tickmode="linear"),
+        #     plot_bgcolor="rgba(0,0,0,0)",
+        #     yaxis=(dict(showgrid=False)),
+        #     height = 800,
+        # )
 
         # st.plotly_chart(fig_df_s7)
-        tab1.plotly_chart(fig_df_s7, use_container_width=True)
+        st.plotly_chart(fig_df_s7, use_container_width=True)
     except:
         st.warning("No subcategory ECLIs to show: You did not select anything")
 
@@ -589,10 +581,9 @@ if country !='':
 
     #NEW PLOT No. 3
 
-    tab1.markdown("---")
-    tab2.markdown("---")
-    tab1.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
-    tab2.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
+    st.markdown("---")
+
+    st.markdown("<h2 style='text-align: center;'>ECLI PER SECTOR</h2>", unsafe_allow_html=True)
     left = st.columns(1)
     left = st.columns(1)
     # cursor = conn.cursor(as_dict=True)
@@ -689,37 +680,37 @@ if country !='':
     if len(sub_cat)>0:
         if 'Services' in sub_cat:
             try:
-                df_selection2['ECLI_Services']=(df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[0]]/df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[1]])*100
+                df_selection2['EServices']=(df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[0]]/df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[1]])*100
             except:
-                df_selection2['ECLI_Services']=0
+                df_selection2['EServices']=0
 
                 
         if 'AppliestoAll' in sub_cat:
             
             try:
-                df_selection2['ECLI_AppliestoAll']=(df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[0]]/df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[1]])*100
+                df_selection2['EAppliestoAll']=(df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[0]]/df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[1]])*100
             except:
-                df_selection2['ECLI_AppliestoAll']=0
+                df_selection2['EAppliestoAll']=0
 
         if 'Resident' in sub_cat:
             try:
-                df_selection2['ECLI_Resident']=(((df_selection2.filter(like='Resident'))[['ResidentIndex', 'ddResident']])[(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']]).columns[0]]/(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']])[df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']].columns[1]])*100
+                df_selection2['EResident']=(((df_selection2.filter(like='Resident'))[['ResidentIndex', 'ddResident']])[(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']]).columns[0]]/(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']])[df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']].columns[1]])*100
             except:
-                df_selection2['ECLI_Resident']=0
+                df_selection2['EResident']=0
                 
         # df_selection2 = df_selection2.T.drop_duplicates().T
             
         if 'ExchangeRateMeasures' in sub_cat:
             try:
-                df_selection2['ECLI_ExchangeRateMeasure']=((df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[0]]/(df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[1]])*100
+                df_selection2['EExchangeRateMeasure']=((df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[0]]/(df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[1]])*100
             except:
-                df_selection2['ECLI_ExchangeRateMeasure']=0
+                df_selection2['EExchangeRateMeasure']=0
             
         if 'NonResident' in sub_cat:
             try:
-                df_selection2['ECLI_NonResident']=(((df_selection2.filter(like='NonResident'))[['NonResidentIndex', 'ddNonResident']])[(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']]).columns[0]]/(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']])[df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']].columns[1]])*100
+                df_selection2['ENonResident']=(((df_selection2.filter(like='NonResident'))[['NonResidentIndex', 'ddNonResident']])[(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']]).columns[0]]/(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']])[df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']].columns[1]])*100
             except:
-                df_selection2['ECLI_NonResident']=0
+                df_selection2['ENonResident']=0
                 
         # df_selection2 = df_selection2.T.drop_duplicates().T
         
@@ -727,49 +718,49 @@ if country !='':
             
         if 'PaymentInwards' in sub_cat:
             try:
-                df_selection2['ECLI_PaymentInwards']=((df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[0]]/(df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[1]])*100
+                df_selection2['EPaymentInwards']=((df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[0]]/(df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[1]])*100
             except:
-                df_selection2['ECLI_PaymentInwards']=0
+                df_selection2['EPaymentInwards']=0
 
             
         if 'FinancialSector' in sub_cat:
             try:
-                df_selection2['ECLI_FinancialSector']=(df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[0]]/df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[1]])*100
+                df_selection2['EFinancialSector']=(df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[0]]/df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[1]])*100
             except:
-                df_selection2['ECLI_FinancialSector']=0
+                df_selection2['EFinancialSector']=0
 
             
         if 'CapitalAccount' in sub_cat:
             try:
-                df_selection2['ECLI_CapitalAccount']=(df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[0]]/df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[1]])*100
+                df_selection2['ECapitalAccount']=(df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[0]]/df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[1]])*100
             except:
-                df_selection2['ECLI_CapitalAccount']=0
+                df_selection2['ECapitalAccount']=0
             
         if ('TradeInwards') in sub_cat:
             try:
-                df_selection2['ECLI_TradeInwards']=(df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[0]]/df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[1]])*100
+                df_selection2['ETradeInwards']=(df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[0]]/df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[1]])*100
             except:
-                df_selection2['ECLI_TradeInwards']=0
+                df_selection2['ETradeInwards']=0
 
             
         if 'TradeOutwards' in sub_cat:
             try:
-                df_selection2['ECLI_TradeOutwards']=(df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[0]]/df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[1]])*100
+                df_selection2['ETradeOutwards']=(df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[0]]/df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[1]])*100
             except:
-                df_selection2['ECLI_TradeOutwards']=0
+                df_selection2['ETradeOutwards']=0
 
             
         if 'Goods' in sub_cat:
             try:
-                df_selection2['ECLI_Goods']=(df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[0]]/df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[1]])*100
+                df_selection2['EGoods']=(df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[0]]/df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[1]])*100
             except:
-                df_selection2['ECLI_Goods']=0
+                df_selection2['EGoods']=0
             
         if 'PaymentOutwards' in sub_cat:
             try:
-                df_selection2['ECLI_PaymentOutwards']=(df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[0]]/df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[1]])*100
+                df_selection2['EPaymentOutwards']=(df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[0]]/df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[1]])*100
             except:
-                df_selection2['ECLI_PaymentOutwards'] = 0
+                df_selection2['EPaymentOutwards'] = 0
         # df_selection2 = df_selection2.T.drop_duplicates().T
         
         # df_selection2.to_csv('data_df1.csv', index=False)
@@ -784,8 +775,8 @@ if country !='':
         # # df_selection2.to_csv('see.csv')
         # df_selection2.columns
         if len(df_selection2)>0:
-            col_s =['ECLI_ExchangeRateMeasure','ECLI_Services', 'ECLI_AppliestoAll', 'ECLI_Resident','ECLI_PaymentInwards', 'ECLI_FinancialSector','ECLI_NonResident','ECLI_CapitalAccount',\
-                'ECLI_TradeInwards', 'ECLI_TradeOutwards', 'ECLI_Goods', 'ECLI_PaymentOutwards']
+            col_s =['EExchangeRateMeasure','EServices', 'EAppliestoAll', 'EResident','EPaymentInwards', 'EFinancialSector','ENonResident','ECapitalAccount',\
+                'ETradeInwards', 'ETradeOutwards', 'EGoods', 'EPaymentOutwards']
             cols = []
             for i in col_s:
                 if i in df_selection2.columns:
@@ -842,9 +833,8 @@ if country !='':
                         .set_caption('Subcategory ECLI')
         df16.to_csv('file2.csv')
                     
-        tab1.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
-        tab2.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
-        tab2.table(df17)
+        st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
+        st.table(df17)
     else:
         select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
         select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
@@ -857,8 +847,8 @@ if country !='':
                         .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
-        tab1.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
-        tab2.table(dfs3)
+        st.markdown("<h3 style='text-align: center;'>ECLI PER SECTOR</h3>", unsafe_allow_html=True)
+        st.table(dfs3)
     # st.dataframe(data_df4)
     # # multi_select = st.multiselect('Choose Category', options=('2020', '2021','amazon','oracle'))
     # # multi_select1 = st.multiselect('Choose Year', options=('MICRosoft', 'Apple','amazon','oracle'))
@@ -901,8 +891,8 @@ df_sub2_ = df_sub2.style.highlight_between(left=0.0, right = 10.1, color = 'gree
                         .highlight_between(left=30.1, right = 100.0, color = 'red')\
                         .format("{:.2f}")
 df_sub1.to_csv('file3.csv')
-tab2.markdown("<h3 style='text-align: center;'>ECLI PER CATEGORY and SUBCATEGORY</h3>", unsafe_allow_html=True)                        
-tab2.dataframe(df_sub2_)
+                        
+st.dataframe(df_sub2_)
 
 
 
@@ -915,12 +905,9 @@ tab2.dataframe(df_sub2_)
 #NEW PLOT No. 4
 
 
-tab3.markdown("---")
+st.markdown("---")
 
-tab3.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True)
-tab2.markdown("---")
-
-tab2.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center;'>ECLI PER COUNTRY</h2>", unsafe_allow_html=True)
 # cursor = conn.cursor(as_dict=True)
 # cursor.execute("""select d.Year, e.Name, a.CategoryName, a.EcliID,b.QuestionId,  c.QuestionId as QAID,c.DNormalisedWeight,
 # b.ExchangeRateMeasures,b.Services,
@@ -987,9 +974,9 @@ select = ['ExchangeRateMeasures', 'Services', 'Goods', 'FinancialSector', 'Capit
 #     options = ls2,
 #     default = ls2
 # )
-sc = ["ECLI_Services", "ECLI_AppliestoAll", "ECLI_Resident", "ECLI_PaymentOutwards", "ECLI_ExchangeRateMeasure",\
-  "ECLI_NonResident", "ECLI_PaymentInwards", "ECLI_FinancialSector", "ECLI_CapitalAccount", "ECLI_TradeInwards", "ECLI_TradeOutwards",\
-  "ECLI_Goods"]
+sc = ["EServices", "EAppliestoAll", "EResident", "EPaymentOutwards", "EExchangeRateMeasure",\
+  "ENonResident", "EPaymentInwards", "EFinancialSector", "ECapitalAccount", "ETradeInwards", "ETradeOutwards",\
+  "EGoods"]
 # st.write(sc)
 # year = st.checkbox(
 #     "Chhoose year",
@@ -1016,89 +1003,93 @@ df_selection2 = df_s2.copy()
 # df_selection2
 if len(sub_cat)>0:
     
-        if 'Services' in sub_cat:
-            try:
-                df_selection2['ECLI_Services']=(df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[0]]/df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[1]])*100
-            except:
-                df_selection2['ECLI_Services']=0
+    if 'Services' in sub_cat:
+        try:
+            df_selection2['EServices']=(df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[0]]/df_selection2.filter(like='Services')[df_selection2.filter(like='Services').columns[1]])*100
+        except:
+            df_selection2['EServices']=0
 
-                
-        if 'AppliestoAll' in sub_cat:
             
-            try:
-                df_selection2['ECLI_AppliestoAll']=(df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[0]]/df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[1]])*100
-            except:
-                df_selection2['ECLI_AppliestoAll']=0
+    if 'AppliestoAll' in sub_cat:
+        
+        try:
+            df_selection2['EAppliestoAll']=(df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[0]]/df_selection2.filter(like='AppliestoAll')[df_selection2.filter(like='AppliestoAll').columns[1]])*100
+        except:
+            df_selection2['EAppliestoAll']=0
 
-        if 'Resident' in sub_cat:
-            try:
-                df_selection2['ECLI_Resident']=(((df_selection2.filter(like='Resident'))[['ResidentIndex', 'ddResident']])[(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']]).columns[0]]/(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']])[df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']].columns[1]])*100
-            except:
-                df_selection2['ECLI_Resident']=0
-                
-        # df_selection2 = df_selection2.T.drop_duplicates().T
+    if 'Resident' in sub_cat:
+        try:
+            # df_selection2.drop(columns=['EResident'], inplace=True)
+            df_selection2['EResident']=(((df_selection2.filter(like='Resident'))[['ResidentIndex', 'ddResident']])[(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']]).columns[0]]/(df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']])[df_selection2.filter(like='Resident')[['ResidentIndex', 'ddResident']].columns[1]])*100
+        except:
+            df_selection2['EResident']=0
             
-        if 'ExchangeRateMeasures' in sub_cat:
-            try:
-                df_selection2['ECLI_ExchangeRateMeasure']=((df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[0]]/(df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[1]])*100
-            except:
-                df_selection2['ECLI_ExchangeRateMeasure']=0
+        
+        
+    if 'ExchangeRateMeasures' in sub_cat:
+        try:
+            df_selection2['EExchangeRateMeasure']=((df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[0]]/(df_selection2.filter(like='ExchangeRateMeasure'))[(df_selection2.filter(like='ExchangeRateMeasure')).columns[1]])*100
+        except:
+            df_selection2['EExchangeRateMeasure']=0
+        
+    if 'NonResident' in sub_cat:
+        try:
+            # df_selection2.drop(columns=['ENonResident'], inplace=True)
+            df_selection2['ENonResident']=(((df_selection2.filter(like='NonResident'))[['NonResidentIndex', 'ddNonResident']])[(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']]).columns[0]]/(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']])[df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']].columns[1]])*100
+        except:
+            df_selection2['ENonResident']=0
+        
+        # df_selection2
             
-        if 'NonResident' in sub_cat:
-            try:
-                df_selection2['ECLI_NonResident']=(((df_selection2.filter(like='NonResident'))[['NonResidentIndex', 'ddNonResident']])[(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']]).columns[0]]/(df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']])[df_selection2.filter(like='NonResident')[['NonResidentIndex', 'ddNonResident']].columns[1]])*100
-            except:
-                df_selection2['ECLI_NonResident']=0
-                
-        # df_selection2 = df_selection2.T.drop_duplicates().T
         
     
-            
-        if 'PaymentInwards' in sub_cat:
-            try:
-                df_selection2['ECLI_PaymentInwards']=((df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[0]]/(df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[1]])*100
-            except:
-                df_selection2['ECLI_PaymentInwards']=0
+   
+        
+    if 'PaymentInwards' in sub_cat:
+        try:
+            df_selection2['EPaymentInwards']=((df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[0]]/(df_selection2.filter(like='PaymentInwards'))[(df_selection2.filter(like='PaymentInwards')).columns[1]])*100
+        except:
+            df_selection2['EPaymentInwards']=0
 
-            
-        if 'FinancialSector' in sub_cat:
-            try:
-                df_selection2['ECLI_FinancialSector']=(df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[0]]/df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[1]])*100
-            except:
-                df_selection2['ECLI_FinancialSector']=0
+        
+    if 'FinancialSector' in sub_cat:
+        try:
+            df_selection2['EFinancialSector']=(df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[0]]/df_selection2.filter(like='FinancialSector')[df_selection2.filter(like='FinancialSector').columns[1]])*100
+        except:
+            df_selection2['EFinancialSector']=0
 
-            
-        if 'CapitalAccount' in sub_cat:
-            try:
-                df_selection2['ECLI_CapitalAccount']=(df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[0]]/df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[1]])*100
-            except:
-                df_selection2['ECLI_CapitalAccount']=0
-            
-        if ('TradeInwards') in sub_cat:
-            try:
-                df_selection2['ECLI_TradeInwards']=(df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[0]]/df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[1]])*100
-            except:
-                df_selection2['ECLI_TradeInwards']=0
+        
+    if 'CapitalAccount' in sub_cat:
+        try:
+            df_selection2['ECapitalAccount']=(df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[0]]/df_selection2.filter(like='CapitalAccount')[df_selection2.filter(like='CapitalAccount').columns[1]])*100
+        except:
+            df_selection2['ECapitalAccount']=0
+        
+    if ('TradeInwards') in sub_cat:
+        try:
+            df_selection2['ETradeInwards']=(df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[0]]/df_selection2.filter(like='TradeInwards')[df_selection2.filter(like='TradeInwards').columns[1]])*100
+        except:
+            df_selection2['ETradeInwards']=0
 
-            
-        if 'TradeOutwards' in sub_cat:
-            try:
-                df_selection2['ECLI_TradeOutwards']=(df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[0]]/df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[1]])*100
-            except:
-                df_selection2['ECLI_TradeOutwards']=0
+        
+    if 'TradeOutwards' in sub_cat:
+        try:
+            df_selection2['ETradeOutwards']=(df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[0]]/df_selection2.filter(like='TradeOutwards')[df_selection2.filter(like='TradeOutwards').columns[1]])*100
+        except:
+            df_selection2['ETradeOutwards']=0
 
-            
-        if 'Goods' in sub_cat:
-            try:
-                df_selection2['ECLI_Goods']=(df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[0]]/df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[1]])*100
-            except:
-                df_selection2['ECLI_Goods']=0
-            
-        if 'PaymentOutwards' in sub_cat:
-            try:
-                df_selection2['ECLI_PaymentOutwards']=(df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[0]]/df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[1]])*100
-            except:
-                df_selection2['ECLI_PaymentOutwards'] = 0
+        
+    if 'Goods' in sub_cat:
+        try:
+            df_selection2['EGoods']=(df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[0]]/df_selection2.filter(like='Goods')[df_selection2.filter(like='Goods').columns[1]])*100
+        except:
+            df_selection2['EGoods']=0
+        
+    if 'PaymentOutwards' in sub_cat:
+        try:
+            df_selection2['EPaymentOutwards']=(df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[0]]/df_selection2.filter(like='PaymentOutwards')[df_selection2.filter(like='PaymentOutwards').columns[1]])*100
+        except:
+            df_selection2['EPaymentOutwards'] = 0
     # df_selection2 = df_selection2.T.drop_duplicates().T
     # df_selection2
 
@@ -1109,36 +1100,36 @@ if len(sub_cat)>0:
 
     # # df_selection2 = df_selection2.T.drop_duplicates().T
     # # df_selection2.to_csv('see.csv')
-        if len(df_selection2)>0:
-            col_s =['ECLI_ExchangeRateMeasure','ECLI_Services', 'ECLI_AppliestoAll', 'ECLI_Resident','ECLI_PaymentInwards', 'ECLI_FinancialSector','ECLI_NonResident','ECLI_CapitalAccount',\
-                'ECLI_TradeInwards', 'ECLI_TradeOutwards', 'ECLI_Goods', 'ECLI_PaymentOutwards']
-            cols = []
-            for i in col_s:
-                if i in df_selection2.columns:
-                    cols.append(i)
+    if len(df_selection2)>0:
+        col_s =['EExchangeRateMeasure','EServices', 'EAppliestoAll', 'EResident','EPaymentInwards', 'EFinancialSector','ENonResident','ECapitalAccount',\
+            'ETradeInwards', 'ETradeOutwards', 'EGoods', 'EPaymentOutwards']
+        cols = []
+        for i in col_s:
+            if i in df_selection2.columns:
+                cols.append(i)
     # df_selection2.columns        
     # cols
-        df_selection2.fillna(0, inplace=True)
-        # st.write(df_selection2.columns)
-        cols=['Year'] +["Name"]+ cols    
-        # df13 = df_selection2[cols].apply(pd.to_numeric, errors='coerce')
-        df13 = df_selection2[cols]
-        # df13
-        df13 = df13.T.drop_duplicates().T
-        # df13
-        # st.write(sub_c)
-        sub_c = ['Year','Name',sub_c]
-        # sub_c
-        # sub_c.insert(0,'Year')
-        # sub_c.insert(1,'Name')
-        if len(sub_c)>0:
-            try:
-                df13_1 = df13[sub_c]
-                # if sub_c:
-                #     df13_1 = df13[['Year']+['Name']+sub_c]
-                # st.write(df13_1)
-                
-                df14 = df13_1.pivot(index='Name', columns = 'Year', values = df13_1.columns[2])
+    df_selection2.fillna(0, inplace=True)
+    # st.write(df_selection2.columns)
+    cols=['Year'] +["Name"]+ cols    
+    # df13 = df_selection2[cols].apply(pd.to_numeric, errors='coerce')
+    df13 = df_selection2[cols]
+    # df13
+    df13 = df13.T.drop_duplicates().T
+    # df13
+    # st.write(sub_c)
+    sub_c = ['Year','Name',sub_c]
+    # sub_c
+    # sub_c.insert(0,'Year')
+    # sub_c.insert(1,'Name')
+    if len(sub_c)>0:
+        try:
+            df13_1 = df13[sub_c]
+            # if sub_c:
+            #     df13_1 = df13[['Year']+['Name']+sub_c]
+            # st.write(df13_1)
+            
+            df14 = df13_1.pivot(index='Name', columns = 'Year', values = df13_1.columns[2])
             # df14
             # df13.to_csv('df_sel.csv')
             # # cols1.insert(0,'Year')
@@ -1173,50 +1164,46 @@ if len(sub_cat)>0:
             # # df16 = df16[~df16.index.duplicated(keep='first')]
             # # df16.to_csv('df16.csv')
         
-                df15 = df14.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
-                            .highlight_between(left=10.1, right = 20.1, color = 'orange')\
-                            .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
-                            .highlight_between(left=30.1, right = 100.0, color = 'red')\
-                            .format("{:.2f}")
-                df14.to_csv('file4.csv')
-                        
-                z = df13.columns[2]
+            df15 = df14.style.highlight_between(left=0.0, right = 10.1, color = 'green')\
+                        .highlight_between(left=10.1, right = 20.1, color = 'orange')\
+                        .highlight_between(left=20.1, right = 30.1, color = 'yellow')\
+                        .highlight_between(left=30.1, right = 100.0, color = 'red')\
+                        .format("{:.2f}")
+            df14.to_csv('file4.csv')
+                    
+            z = df13.columns[2]
 
-                # tab3.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs PER SECTOR</h3>", unsafe_allow_html=True)
-                tab3.markdown("<h3 style='text-align: center;'>COMPARATIVE TABLE "+df13_1.columns[2]+"</h3>", unsafe_allow_html=True)
-                tab3.table(df15)
-                
-                if year:
-                    df16 = df13_1.query(
-                        "Year == @year"
-                    )
-                # df13_1
-                fig_df_s16 = px.bar(
-                df16,
-                y = df13_1.columns[2] ,
-                x = 'Name',
-                # color= df13_1.columns[2],
-                title = "<b>COMPARATIVE GRAPH TOTAL "+df13_1.columns[2]+"</b>" ,
-                barmode = 'group',
-                # color_discrete_sequence = ["#0083B8"]*len(df_s7),
-                template = "plotly_white"
-                
+            st.markdown("<h3 style='text-align: center;'>COUNTRY ECLIs PER SECTOR</h3>", unsafe_allow_html=True)
+            st.table(df15)
+            
+            if year:
+                df16 = df13_1.query(
+                    "Year == @year"
                 )
-                fig_df_s16.update_layout(
-                    xaxis=dict(tickmode="linear"),
-                    plot_bgcolor="rgba(0,0,0,0)",
-                    yaxis=(dict(showgrid=False)),
-                    height = 800,
-                )
-                
-                tab3.markdown("<h3 style='text-align: center;'>COMPARATIVE GRAPH TOTAL "+df13_1.columns[2]+"</h3>", unsafe_allow_html=True)
-
-                # st.plotly_chart(fig_df_s16)
-                tab3.plotly_chart(fig_df_s16, use_container_width=True)
-            except:
-                tab3.warning("No Country ECLIs to show: There is no valid data")
-        
-    # else:
+            # df13_1
+            # fig_df_s16 = px.bar(
+            # df16,
+            # y = df13_1.columns[2] ,
+            # x = 'Name',
+            # # color = 'Name',
+            # title = "<b>ECLIs PER COUNTRY BY SECTOR</b>",
+            # barmode = 'group',
+            # # color_discrete_sequence = ["#0083B8"]*len(df_s7),
+            # template = "plotly_white"
+            
+            # )
+            # fig_df_s16.update_layout(
+            #     xaxis=dict(tickmode="linear"),
+            #     plot_bgcolor="rgba(0,0,0,0)",
+            #     yaxis=(dict(showgrid=False)),
+            #     height = 800,
+            # )
+            
+            # # st.plotly_chart(fig_df_s16)
+            # st.plotly_chart(fig_df_s16, use_container_width=True)
+        except:
+            st.warning("No Country ECLIs to show: There is no valid data")
+# else:
 #     select = ['ExchangeRateMeasuresIndex', 'ServicesIndex', 'GoodsIndex', 'FinancialSectorIndex', 'CapitalAccountIndex', 'AppliestoAllIndex']
 #     select1 = ['ddExchangeRateMeasures', 'ddServices', 'ddGoods', 'ddFinancialSector', 'ddCapitalAccount', 'ddAppliestoAll']
 #     df_selection2_ = df_s2.copy()
@@ -1230,9 +1217,59 @@ if len(sub_cat)>0:
 # #     df3 = df2[df2['Year']== multi_select]
 # #     st.dataframe(df3)
 
+# APP_ID = '4562dbbd-c2c6-4785-9309-aab7427b5d4d'
+# SCOPES  = ['Files.ReadWrite']
+
+# access_token = generate_access_token(APP_ID, SCOPES)
+
+# headers = {
+#     'Authorization' :'Bearer' + access_token['access_token']
+    
+# }
+
+# file_path = r'file4.csv'
+# file_name = os.path.basename(file_path)
+# with open(file_path,'rb') as upload:
+#     media_content = upload.read()
+
+# response  = requests.put(
+#     GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name}:/content',
+#     headers = headers,
+#     data = media_content
+# )
+
+# file_path1 = r'file1.csv'
+# file_name1 = os.path.basename(file_path1)
+# with open(file_path1,'rb') as upload:
+#     media_content = upload.read()
+
+# response  = requests.put(
+#     GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name1}:/content',
+#     headers = headers,
+#     data = media_content
+# )
+
+# file_path2 = r'file2.csv'
+# file_name2 = os.path.basename(file_path2)
+# with open(file_path2,'rb') as upload:
+#     media_content = upload.read()
+
+# response  = requests.put(
+#     GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name2}:/content',
+#     headers = headers,
+#     data = media_content
+# )
+
+# file_path3 = r'file3.csv'
+# file_name3 = os.path.basename(file_path3)
+# with open(file_path3,'rb') as upload:
+#     media_content = upload.read()
+
+# response  = requests.put(
+#     GRAPH_API_ENDPOINT + f'/me/drive/items/root:/{file_name3}:/content',
+#     headers = headers,
+#     data = media_content
+# )
 #print(response.json())
 
-
-
-
-
+dfs16, df_sub1, df_s7, df_s1
